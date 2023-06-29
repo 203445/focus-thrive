@@ -10,6 +10,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,9 +101,46 @@ class _HomeState extends State<Home> {
                     border: Border.all(color: Color.fromRGBO(20, 148, 164, 1)),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const SizedBox(
+                  child:  SizedBox(
                     width: 300,
                     height: 80,
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text("Pendientes",style: GoogleFonts.getFont('Work Sans',
+                        textStyle: const TextStyle(
+                          fontSize: 24,
+                          color: Color.fromRGBO(102, 109, 149, 1),
+                          fontWeight: FontWeight.w600)),
+                    textAlign: TextAlign.center,
+                  ),
+                      ),
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:  Color.fromRGBO(246, 35, 35, 0.89),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '2',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   ),
                 ),
               ),
@@ -107,9 +151,46 @@ class _HomeState extends State<Home> {
                     border: Border.all(color: Color.fromRGBO(20, 148, 164, 1)),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const SizedBox(
+                  child:  SizedBox(
                     width: 300,
                     height: 80,
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text("Por Hacer",style: GoogleFonts.getFont('Work Sans',
+                        textStyle: const TextStyle(
+                          fontSize: 24,
+                          color: Color.fromRGBO(102, 109, 149, 1),
+                          fontWeight: FontWeight.w600)),
+                    textAlign: TextAlign.center,
+                  ),
+                      ),
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:  Color.fromRGBO(46, 167, 217, 1),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '2',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ), 
                   ),
                 ),
               ),
@@ -125,18 +206,35 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 2, top: 6),
-                          child: Text("Hola"),
-                        ),
+                        alignment: Alignment.center,
+                        child: Text("Terminadas",style: GoogleFonts.getFont('Work Sans',
+                        textStyle: const TextStyle(
+                          fontSize: 24,
+                          color: Color.fromRGBO(102, 109, 149, 1),
+                          fontWeight: FontWeight.w600)),
+                    textAlign: TextAlign.center,
+                  ),
                       ),
                       Container(
-                        width: 50,
-                        height: 50,
+                        width: 30,
+                        height: 30,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.blue,
+                          color: const Color.fromRGBO(16, 170, 130, 1),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '2',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -146,6 +244,24 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Buscar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
+        ],
       ),
     );
   }
