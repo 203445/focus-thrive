@@ -9,17 +9,36 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+
+
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
+
+  
+
   void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  setState(() {
+    _selectedIndex = index;
+  // Navegar a la ruta correspondiente según el índice seleccionado
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/buscar');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/perfil');
+        break;
+    }
+  });
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
@@ -250,7 +269,7 @@ class _HomeState extends State<Home> {
         children:[ BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: _onNavItemTapped,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Inicio',
@@ -270,6 +289,8 @@ class _HomeState extends State<Home> {
       
     );
   }
+
+  
 }
 
 

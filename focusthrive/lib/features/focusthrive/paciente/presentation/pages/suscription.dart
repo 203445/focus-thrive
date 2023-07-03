@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PremiumSubscriptionView extends StatelessWidget {
+  const PremiumSubscriptionView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
