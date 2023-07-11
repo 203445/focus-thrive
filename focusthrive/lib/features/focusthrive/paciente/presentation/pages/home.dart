@@ -9,36 +9,30 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-
-
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-
-  
-
   void _onNavItemTapped(int index) {
-  setState(() {
-    _selectedIndex = index;
-  // Navegar a la ruta correspondiente según el índice seleccionado
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/');
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/buscar');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/perfil');
-        break;
-    }
-  });
-}
+    setState(() {
+      _selectedIndex = index;
+      // Navegar a la ruta correspondiente según el índice seleccionado
+      switch (index) {
+        case 0:
+          Navigator.pushNamed(context, '/');
+          break;
+        case 1:
+          Navigator.pushNamed(context, '/buscar');
+          break;
+        case 2:
+          Navigator.pushNamed(context, '/perfil');
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
@@ -120,46 +114,48 @@ class _HomeState extends State<Home> {
                     border: Border.all(color: Color.fromRGBO(20, 148, 164, 1)),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child:  SizedBox(
+                  child: SizedBox(
                     width: 300,
                     height: 80,
                     child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text("Pendientes",style: GoogleFonts.getFont('Work Sans',
-                        textStyle: const TextStyle(
-                          fontSize: 24,
-                          color: Color.fromRGBO(102, 109, 149, 1),
-                          fontWeight: FontWeight.w600)),
-                    textAlign: TextAlign.center,
-                  ),
-                      ),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color:  Color.fromRGBO(246, 35, 35, 0.89),
-                        ),
-                        child: Align(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Align(
                           alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '2',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                          child: Text(
+                            "Pendientes",
+                            style: GoogleFonts.getFont('Work Sans',
+                                textStyle: const TextStyle(
+                                    fontSize: 24,
+                                    color: Color.fromRGBO(102, 109, 149, 1),
+                                    fontWeight: FontWeight.w600)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromRGBO(246, 35, 35, 0.89),
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                '2',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -170,46 +166,48 @@ class _HomeState extends State<Home> {
                     border: Border.all(color: Color.fromRGBO(20, 148, 164, 1)),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child:  SizedBox(
+                  child: SizedBox(
                     width: 300,
                     height: 80,
                     child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text("Por Hacer",style: GoogleFonts.getFont('Work Sans',
-                        textStyle: const TextStyle(
-                          fontSize: 24,
-                          color: Color.fromRGBO(102, 109, 149, 1),
-                          fontWeight: FontWeight.w600)),
-                    textAlign: TextAlign.center,
-                  ),
-                      ),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color:  Color.fromRGBO(46, 167, 217, 1),
-                        ),
-                        child: Align(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Align(
                           alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '2',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                          child: Text(
+                            "Por Hacer",
+                            style: GoogleFonts.getFont('Work Sans',
+                                textStyle: const TextStyle(
+                                    fontSize: 24,
+                                    color: Color.fromRGBO(102, 109, 149, 1),
+                                    fontWeight: FontWeight.w600)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromRGBO(46, 167, 217, 1),
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                '2',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ), 
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -226,13 +224,15 @@ class _HomeState extends State<Home> {
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: Text("Terminadas",style: GoogleFonts.getFont('Work Sans',
-                        textStyle: const TextStyle(
-                          fontSize: 24,
-                          color: Color.fromRGBO(102, 109, 149, 1),
-                          fontWeight: FontWeight.w600)),
-                    textAlign: TextAlign.center,
-                  ),
+                        child: Text(
+                          "Terminadas",
+                          style: GoogleFonts.getFont('Work Sans',
+                              textStyle: const TextStyle(
+                                  fontSize: 24,
+                                  color: Color.fromRGBO(102, 109, 149, 1),
+                                  fontWeight: FontWeight.w600)),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                       Container(
                         width: 30,
@@ -264,9 +264,8 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      bottomNavigationBar: Stack(
-        alignment: Alignment.center,
-        children:[ BottomNavigationBar(
+      bottomNavigationBar: Stack(alignment: Alignment.center, children: [
+        BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: _onNavItemTapped,
           items: const [
@@ -282,15 +281,11 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.person),
               label: 'Perfil',
             ),
-            
           ],
-        ),]
-      ),
-      
+        ),
+      ]),
     );
   }
-
-  
 }
 
 

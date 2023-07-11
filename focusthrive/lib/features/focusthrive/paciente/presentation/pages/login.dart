@@ -86,7 +86,7 @@ class _LoginPacienteState extends State<LoginPaciente> {
                                     "Correo electronico",
                                     style: TextStyle(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w700,
                                       color: Color.fromRGBO(4, 4, 4, 35),
                                     ),
                                   ),
@@ -142,7 +142,7 @@ class _LoginPacienteState extends State<LoginPaciente> {
                                     'Contraseña',
                                     style: TextStyle(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w700,
                                       color: Color.fromRGBO(4, 4, 4, 35),
                                     ),
                                   ),
@@ -216,8 +216,10 @@ class _LoginPacienteState extends State<LoginPaciente> {
                     onPressed: () {
                       print('ok');
                       if (_formKey.currentState!.validate()) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Home()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Home()));
                         // context.read<UsersBloc>().add(Register(
                         //     email: emailController.text,
                         //     password: passwordController.text));
