@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/solicitudes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePs extends StatefulWidget {
@@ -17,30 +17,46 @@ class _HomeState extends State<HomePs> {
     return Scaffold(
       body: Column(
         children: [
-          // Parte superior: Avatar y texto
-          Container(
-            width: screenWidth,
-            color: Colors.blue,
+          Material(
+            elevation: 6, // Ajusta el valor de elevación según tus preferencias
             child: Container(
-              padding: EdgeInsets.all(25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/img/image.jpeg'),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Usuario',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+              width: screenWidth,
+              color: const Color.fromRGBO(11, 117, 133, 0.72),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 60, 20, 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundImage: AssetImage('assets/img/image.jpeg'),
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Hola Mario',
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Text(
+              'Para ti',
+              style: GoogleFonts.getFont('Work Sans',
+                  textStyle: const TextStyle(
+                      fontSize: 33,
+                      color: Color.fromRGBO(102, 109, 149, 1),
+                      fontWeight: FontWeight.w400)),
+              textAlign: TextAlign.center,
             ),
           ),
           // Parte inferior: Contenido y barra de navegación
@@ -53,44 +69,167 @@ class _HomeState extends State<HomePs> {
                   // Contenido
                   Expanded(
                     child: Center(
-                      child: Text(
-                        'Contenido',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              print("si funciona");
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Solicitudes()));
+                            },
+                            child: Container(
+                              width: 300,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color.fromRGBO(20, 148, 164, 1)),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Solicitudes',
+                                  style: GoogleFonts.getFont('Work Sans',
+                                      textStyle: const TextStyle(
+                                          fontSize: 24,
+                                          color:
+                                              Color.fromRGBO(102, 109, 149, 1),
+                                          fontWeight: FontWeight.w600)),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              width: 300,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color.fromRGBO(20, 148, 164, 1)),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Citas',
+                                  style: GoogleFonts.getFont('Work Sans',
+                                      textStyle: const TextStyle(
+                                          fontSize: 24,
+                                          color:
+                                              Color.fromRGBO(102, 109, 149, 1),
+                                          fontWeight: FontWeight.w600)),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              width: 300,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color:
+                                        const Color.fromRGBO(20, 148, 164, 1)),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Comentarios',
+                                  style: GoogleFonts.getFont('Work Sans',
+                                      textStyle: const TextStyle(
+                                          fontSize: 24,
+                                          color:
+                                              Color.fromRGBO(102, 109, 149, 1),
+                                          fontWeight: FontWeight.w600)),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                   // Barra de navegación
                   Container(
-                    height: 60,
-                    color: Colors.grey,
+                    height: 65,
+                    color: Color.fromRGBO(11, 117, 133, 0.72),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        IconButton(
-                          icon: Icon(Icons.home),
-                          onPressed: () {
-                            // Acción al presionar el ícono de inicio
-                          },
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.home,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                              onPressed: () {
+                                // Acción al presionar el ícono de inicio
+                              },
+                            ),
+                            Text(
+                              'Inicio',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () {
-                            // Acción al presionar el ícono de búsqueda
-                          },
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                              onPressed: () {
+                                // Acción al presionar el ícono de búsqueda
+                              },
+                            ),
+                            Text(
+                              'Perfil',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: Icon(Icons.settings),
-                          onPressed: () {
-                            // Acción al presionar el ícono de ajustes
-                          },
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.settings,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                              onPressed: () {
+                                // Acción al presionar el ícono de ajustes
+                              },
+                            ),
+                            Text(
+                              'Ajustes',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -100,9 +239,6 @@ class _HomeState extends State<HomePs> {
     );
   }
 }
-
-
-
 
 //  Navigator.push(context,
 //                             MaterialPageRoute(builder: (context) =>  PremiumSubscriptionView()));

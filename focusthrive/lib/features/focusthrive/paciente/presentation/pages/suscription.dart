@@ -8,6 +8,8 @@ class PremiumSubscriptionView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Plan Premium'),
+        backgroundColor: Colors.white,
+        elevation: 5,
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -71,6 +73,7 @@ class PlanCard extends StatelessWidget {
   final List<String> features;
 
   const PlanCard({
+    super.key,
     required this.title,
     required this.price,
     required this.features,
