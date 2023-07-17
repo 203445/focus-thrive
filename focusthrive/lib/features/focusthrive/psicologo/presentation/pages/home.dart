@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/solicitudes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../paciente/presentation/pages/ayuda.dart';
+
 class HomePs extends StatefulWidget {
   const HomePs({super.key});
 
@@ -215,7 +217,10 @@ class _HomeState extends State<HomePs> {
                                 size: 28,
                               ),
                               onPressed: () {
-                                // Acción al presionar el ícono de ajustes
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AyudaP()));
                               },
                             ),
                             Text(

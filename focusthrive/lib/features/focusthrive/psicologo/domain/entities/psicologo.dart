@@ -7,18 +7,17 @@ class Psicologo {
   final String numerotarjeta;
   final String correo;
   final String telefono;
-  final bool esPremium;
 
-  Psicologo(
-      {required this.id,
-      required this.nombre,
-      required this.apellidos,
-      required this.contrasena,
-      required this.urlFoto,
-      required this.numerotarjeta,
-      required this.correo,
-      required this.telefono,
-      required this.esPremium});
+  Psicologo({
+    required this.id,
+    required this.nombre,
+    required this.apellidos,
+    required this.contrasena,
+    required this.urlFoto,
+    required this.numerotarjeta,
+    required this.correo,
+    required this.telefono,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,9 +25,8 @@ class Psicologo {
       'nombre': nombre,
       'apellidos': apellidos,
       'contrasena': contrasena,
-      'urlFoto': urlFoto,
-      'numerotarjeta': numerotarjeta,
-      'esPremium': esPremium
+      'url_foto_perfil': urlFoto,
+      'numero_tarjeta': numerotarjeta,
     };
   }
 }

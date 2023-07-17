@@ -1,7 +1,7 @@
-import 'package:focusthrive/features/focusthrive/paciente/domain/entities/paciente.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/domain/entities/psicologo.dart';
 
-class PacienteModel extends Paciente {
-  PacienteModel(
+class PsicologoModels extends Psicologo {
+  PsicologoModels(
       {required String id,
       required String nombre,
       required String apellidos,
@@ -9,7 +9,6 @@ class PacienteModel extends Paciente {
       required String correo,
       required String telefono,
       required String contrasena,
-      required bool esPremium,
       required String numerotarjeta})
       : super(
             id: id,
@@ -19,11 +18,10 @@ class PacienteModel extends Paciente {
             correo: correo,
             telefono: telefono,
             contrasena: contrasena,
-            esPremium: esPremium,
             numerotarjeta: numerotarjeta);
 
-  factory PacienteModel.fromJson(Map<String, dynamic> json) {
-    return PacienteModel(
+  factory PsicologoModels.fromJson(Map<String, dynamic> json) {
+    return PsicologoModels(
         id: json["id"].toString(),
         nombre: json["nombre"].toString(),
         apellidos: json["apellidos"].toString(),
@@ -31,20 +29,18 @@ class PacienteModel extends Paciente {
         correo: json["correo"].toString(),
         telefono: json["telefono"].toString(),
         contrasena: json["contrasena"].toString(),
-        esPremium: json["es_premium"],
         numerotarjeta: json["numero_tarjeta"].toString());
   }
 
-  factory PacienteModel.fromEntity(Paciente paciente) {
-    return PacienteModel(
-        id: paciente.id,
-        nombre: paciente.nombre,
-        apellidos: paciente.apellidos,
-        urlFoto: paciente.urlFoto,
-        correo: paciente.correo,
-        telefono: paciente.telefono,
-        contrasena: paciente.contrasena,
-        esPremium: paciente.esPremium,
-        numerotarjeta: paciente.numerotarjeta);
+  factory PsicologoModels.fromEntity(Psicologo psicologo) {
+    return PsicologoModels(
+        id: psicologo.id,
+        nombre: psicologo.nombre,
+        apellidos: psicologo.apellidos,
+        urlFoto: psicologo.urlFoto,
+        correo: psicologo.correo,
+        telefono: psicologo.telefono,
+        contrasena: psicologo.contrasena,
+        numerotarjeta: psicologo.numerotarjeta);
   }
 }

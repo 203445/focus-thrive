@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Solicitudes extends StatefulWidget {
   const Solicitudes({super.key});
@@ -11,12 +12,51 @@ class _SolicitudesState extends State<Solicitudes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text("Solicitudes")),
-        elevation: 6,
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        toolbarHeight: 100,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 255, 254, 254),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: AppBar(
+            centerTitle: true,
+            toolbarHeight: 100,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              "Solicitudes",
+              style: GoogleFonts.getFont(
+                'Work Sans',
+                textStyle: const TextStyle(
+                  fontSize: 30,
+                  color: Color.fromRGBO(102, 109, 149, 1),
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+          ),
+        ),
       ),
+      // AppBar(
+      //   title: Center(child: Text("Solicitudes")),
+      //   elevation: 0,
+      //   backgroundColor: Colors.transparent,
+      //   toolbarHeight: 100,
+      // ),
       body: Column(
         children: [
           SizedBox(
