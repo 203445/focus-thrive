@@ -19,7 +19,7 @@ class _AyudaPState extends State<AyudaP> {
         preferredSize: Size.fromHeight(100),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 255, 254, 254),
+            color: Color.fromRGBO(255, 255, 255, 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -44,7 +44,7 @@ class _AyudaPState extends State<AyudaP> {
                 textStyle: const TextStyle(
                   fontSize: 30,
                   color: Color.fromRGBO(102, 109, 149, 1),
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               textAlign: TextAlign.center,

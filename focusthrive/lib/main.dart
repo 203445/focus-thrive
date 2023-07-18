@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromRGBO(11, 117, 133, 1)),
-        useMaterial3: true,
+        // useMaterial3: true,
         textTheme: GoogleFonts.workSansTextTheme(
           Theme.of(context).textTheme,
         ),

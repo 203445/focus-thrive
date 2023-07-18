@@ -13,7 +13,7 @@ class _CuentaPState extends State<CuentaP> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: Size.fromHeight(80),
         child: Container(
           decoration: BoxDecoration(
             color: Color.fromARGB(255, 255, 254, 254),
@@ -29,7 +29,8 @@ class _CuentaPState extends State<CuentaP> {
             centerTitle: true,
             toolbarHeight: 100,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.navigate_before_rounded,
+                  size: 43, color: Color.fromRGBO(20, 148, 164, 1)),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -41,7 +42,7 @@ class _CuentaPState extends State<CuentaP> {
                 textStyle: const TextStyle(
                   fontSize: 30,
                   color: Color.fromRGBO(102, 109, 149, 1),
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               textAlign: TextAlign.center,
