@@ -9,7 +9,7 @@ class PacienteModel extends Paciente {
       required String correo,
       required String telefono,
       required String contrasena,
-      required bool esPremium,
+      required String esPremium,
       required String numerotarjeta})
       : super(
             id: id,

@@ -72,10 +72,10 @@ class _LoginPacienteState extends State<LoginPaciente> {
                             child: SizedBox(
                                 width: double.infinity,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.280,
+                                    MediaQuery.of(context).size.height * 0.290,
                                 child: Column(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(

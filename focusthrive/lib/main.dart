@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/home.dart';
 
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/login.dart';
+import 'package:focusthrive/onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'features/focusthrive/paciente/presentation/pages/suscription.dart';
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
             return null;
         }
       },
-      home: const LoginPaciente(),
+      // home: const LoginPaciente(),
+      home: OnboardingScreen(),
     );
   }
 }

@@ -7,7 +7,7 @@ class Paciente {
   final String numerotarjeta;
   final String correo;
   final String telefono;
-  final bool esPremium;
+  final String esPremium;
 
   Paciente(
       {required this.id,
