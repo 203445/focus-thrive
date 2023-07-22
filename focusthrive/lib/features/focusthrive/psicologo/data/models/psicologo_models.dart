@@ -5,19 +5,23 @@ class PsicologoModels extends Psicologo {
       {required String id,
       required String nombre,
       required String apellidos,
+      required String contrasena,
       required String urlFoto,
       required String correo,
+      required String descripcion,
+      required String ubicacion,
       required String telefono,
-      required String contrasena,
       required String numerotarjeta})
       : super(
             id: id,
             nombre: nombre,
             apellidos: apellidos,
+            contrasena: contrasena,
             urlFoto: urlFoto,
             correo: correo,
+            description: descripcion,
+            ubicacion: ubicacion,
             telefono: telefono,
-            contrasena: contrasena,
             numerotarjeta: numerotarjeta);
 
   factory PsicologoModels.fromJson(Map<String, dynamic> json) {
@@ -25,10 +29,12 @@ class PsicologoModels extends Psicologo {
         id: json["id"].toString(),
         nombre: json["nombre"].toString(),
         apellidos: json["apellidos"].toString(),
+        contrasena: json["contrasena"].toString(),
         urlFoto: json["url_foto_perfil"].toString(),
         correo: json["correo"].toString(),
+        descripcion: json["descripcion"].toString(),
+        ubicacion: json["ubicacion"].toString(),
         telefono: json["telefono"].toString(),
-        contrasena: json["contrasena"].toString(),
         numerotarjeta: json["numero_tarjeta"].toString());
   }
 
@@ -38,9 +44,11 @@ class PsicologoModels extends Psicologo {
         nombre: psicologo.nombre,
         apellidos: psicologo.apellidos,
         urlFoto: psicologo.urlFoto,
-        correo: psicologo.correo,
-        telefono: psicologo.telefono,
         contrasena: psicologo.contrasena,
+        correo: psicologo.correo,
+        descripcion: psicologo.description,
+        ubicacion: psicologo.ubicacion,
+        telefono: psicologo.telefono,
         numerotarjeta: psicologo.numerotarjeta);
   }
 }

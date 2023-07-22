@@ -6,6 +6,8 @@ class Psicologo {
   final String urlFoto;
   final String numerotarjeta;
   final String correo;
+  final String description;
+  final String ubicacion;
   final String telefono;
 
   Psicologo({
@@ -16,6 +18,8 @@ class Psicologo {
     required this.urlFoto,
     required this.numerotarjeta,
     required this.correo,
+    required this.description,
+    required this.ubicacion,
     required this.telefono,
   });
 

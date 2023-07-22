@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         }
       },
       // home: const LoginPaciente(),
-      home: OnboardingScreen(),
+      home: const OnboardingScreen(),
     );
   }
 }

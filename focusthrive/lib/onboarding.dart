@@ -1,56 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'features/focusthrive/paciente/presentation/pages/login.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({Key? key}) : super(key: key);
+
   @override
-  _OnboardingScreenState createState() => _OnboardingScreenState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  PageController _pageController = PageController();
-  int _currentPage = 0;
-  double _progressWidth = 25.0; // Ancho inicial de la barra de progreso
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  final PageController _pageController = PageController();
 
-  List<OnboardingData> _onboardingData = [
-    OnboardingData(
-      title: "Paso 1",
-      description: "Dale un impulso a tu bienestar emocional.",
-      imagePath: "assets/img/157.jpg",
-      gradientColors: [
-        Color.fromARGB(255, 33, 149, 243),
-        Color.fromARGB(253, 155, 39, 176)
-      ],
-    ),
-    OnboardingData(
-      title: "Paso 2",
-      description: "Enfoca, prospera, conquista.",
-      imagePath: "assets/img/dos.jpg",
-      gradientColors: [Colors.orange, Colors.yellow],
-    ),
-    OnboardingData(
-      title: "Paso 3",
-      description: "Tu guía para brillar sin límites.",
-      imagePath: "assets/img/dos.jpg",
-      gradientColors: [Colors.green, Colors.blue],
-    ),
-    OnboardingData(
-      title: "Bienvenido",
-      description: "Únete, comienza a desbloquear tu máximo potencial.",
-      imagePath: "assets/img/157.jpg",
-      gradientColors: [Colors.purple, Colors.pink],
-    ),
-  ];
+  int _currentPage = 0;
+  double _progressWidth = 30.0; // Ancho inicial de la barra de progreso
+  bool _isLastPage = false;
+
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(vsync: this);
+    _animationController.addListener(() {
+      if (_animationController.value > 0.80) {
+        _animationController.stop();
+      }
+    });
     _pageController.addListener(_onPageChanged);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
   }
 
   void _onPageChanged() {
     setState(() {
       _currentPage = _pageController.page!.round();
-      _progressWidth = _currentPage == _onboardingData.length - 1 ? 35.0 : 25.0;
+      _isLastPage = _currentPage == _onboardingData.length - 1;
+      _progressWidth = _isLastPage ? 35.0 : 25.0;
     });
   }
+
+  final List<OnboardingData> _onboardingData = [
+    OnboardingData(
+      title: "Paso 1",
+      description: "Dale un impulso a tu bienestar emocional.",
+      imagePath: "assets/img/traquilidad.jpg",
+    ),
+    OnboardingData(
+      title: "Paso 2",
+      description: "Enfoca, prospera, conquista.",
+      imagePath: "assets/img/enfoque.jpg",
+    ),
+    OnboardingData(
+      title: "Paso 3",
+      description: "Tu guía para brillar sin límites.",
+      imagePath: "assets/img/guia.jpg",
+    ),
+    OnboardingData(
+      title: "Bienvenido",
+      description: "Únete, comienza a desbloquear tu máximo potencial.",
+      imagePath: "assets/img/157.jpg",
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -97,62 +113,109 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               clipper: CustomShapeClipper(),
               child: Stack(
                 children: [
-                  Center(
-                    child: Image.asset(
-                      data.imagePath,
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      fit: BoxFit.cover,
-                    ),
+                  Image.asset(
+                    data.imagePath,
+                    height: MediaQuery.of(context).size.width * 1.3,
+                    fit: BoxFit.cover,
                   ),
                   Container(
                     width: double.infinity,
                     color:
-                        const Color.fromRGBO(11, 117, 133, 1).withOpacity(0.70),
-                    // child: ClipPath(
-                    //   clipper: CustomShapeClipper(),
-                    //   child: Container(
-                    //     color: Colors.blue,
-                    //   ),
+                        const Color.fromRGBO(11, 117, 133, 1).withOpacity(0.6),
                   ),
-                  // decoration: BoxDecoration(
-                  //   gradient: LinearGradient(
-                  //     colors: data.gradientColors,
-                  //     begin: Alignment.topCenter,
-                  //     end: Alignment.bottomCenter,
-                  //   ),
-                  // ),
-                  // ),
+                  if (!_isLastPage)
+                    Center(
+                      child: Row(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ClipRect(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              widthFactor: 0.7, // Ancho de la imagen
+                              child: Image.asset(
+                                "assets/img/focus.png",
+                                fit: BoxFit.fill,
+                                width: 155,
+                              ),
+                            ),
+                          ),
+                          const Text(
+                            'FocusThrive',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    data.title,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(55, 55, 55, 1),
+          if (!_isLastPage)
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 50),
+                    Text(
+                      data.description,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 23,
+                          color: Color.fromRGBO(55, 55, 55, 1),
+                          fontWeight: FontWeight.w300),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    data.description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color.fromRGBO(55, 55, 55, 1),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
+          if (_isLastPage)
+            Expanded(
+              flex: 2,
+              child: Lottie.asset(
+                "assets/json/thrive.json",
+                repeat: false,
+              ),
+            ),
+          if (_isLastPage)
+            Expanded(
+              flex: 2,
+              child: Container(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(data.description,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 23,
+                            color: Color.fromRGBO(55, 55, 55, 1),
+                            fontWeight: FontWeight.w300)),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    ElevatedButton(
+                      // style: ,
+                      onPressed: () {
+                        // Navegar a la vista de inicio de sesión
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => LoginPaciente(),
+                        ));
+                      },
+                      child: const Text(
+                        'Iniciar sesión',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -180,13 +243,11 @@ class OnboardingData {
   final String title;
   final String description;
   final String imagePath;
-  final List<Color> gradientColors;
 
   OnboardingData({
     required this.title,
     required this.description,
     required this.imagePath,
-    required this.gradientColors,
   });
 }
 

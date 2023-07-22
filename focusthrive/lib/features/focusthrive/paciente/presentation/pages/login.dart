@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/home.dart';
 import 'package:focusthrive/register.dart';
 
+import '../widgets/buton.dart';
+
 class LoginPaciente extends StatefulWidget {
   const LoginPaciente({super.key});
 
@@ -26,32 +28,33 @@ class _LoginPacienteState extends State<LoginPaciente> {
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                SizedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Flexible(
-                        flex: 3,
-                        child: Image(
-                            // alignment: Alignment.center,
-                            image: AssetImage("assets/img/flor.png"),
-                            width: 170),
-                      ),
-                      Flexible(
-                        flex: 6,
-                        child: Text(
-                          "FocusThrive",
-                          style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(126, 150, 170, 35),
+                      ClipRect(
+                        child: Align(
+                          alignment: Alignment.center,
+                          widthFactor: 0.85, // Ancho de la imagen
+                          child: Image.asset(
+                            "assets/img/flor.png",
+                            fit: BoxFit.cover,
+                            width: 130,
                           ),
-                          // textAlign: TextAlign.right,
                         ),
+                      ),
+                      const Text(
+                        "FocusThrive",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.w900,
+                            color: Color.fromRGBO(126, 150, 170, 35)),
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 30,
                 ),
                 SizedBox(
                     width: 450,
@@ -61,12 +64,12 @@ class _LoginPacienteState extends State<LoginPaciente> {
                           "Iniciar Sesión",
                           style: TextStyle(
                             fontSize: 25,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w400,
                             color: Color.fromRGBO(77, 95, 111, 35),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 50, top: 50),
+                          padding: const EdgeInsets.only(bottom: 50, top: 30),
                           child: Form(
                             key: _formKey,
                             child: SizedBox(
@@ -82,7 +85,7 @@ class _LoginPacienteState extends State<LoginPaciente> {
                                       "Correo electronico",
                                       style: TextStyle(
                                         fontSize: 18,
-                                        fontWeight: FontWeight.w700,
+                                        fontWeight: FontWeight.w600,
                                         color: Color.fromRGBO(4, 4, 4, 35),
                                       ),
                                     ),
@@ -140,7 +143,7 @@ class _LoginPacienteState extends State<LoginPaciente> {
                                       'Contraseña',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        fontWeight: FontWeight.w700,
+                                        fontWeight: FontWeight.w600,
                                         color: Color.fromRGBO(4, 4, 4, 35),
                                       ),
                                     ),
@@ -212,14 +215,14 @@ class _LoginPacienteState extends State<LoginPaciente> {
                               text: '¿Aún no tienes una cuenta?        ',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
                                 color: Color.fromRGBO(11, 117, 133, 1),
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: 'Regístrate',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w800,
                                   ),
                                 ),
                               ],
@@ -227,43 +230,20 @@ class _LoginPacienteState extends State<LoginPaciente> {
                           ),
                         ),
                         const SizedBox(
-                          height: 100,
+                          height: 80,
                         ),
                       ],
                     )),
-                SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  child: OutlinedButton(
-                      onPressed: () {
-                        print('ok');
-                        if (_formKey.currentState!.validate()) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Home()));
-                          // context.read<UsersBloc>().add(Register(
-                          //     email: emailController.text,
-                          //     password: passwordController.text));
-                          print("ok");
-                        }
-                      },
-                      style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                          backgroundColor:
-                              const Color.fromRGBO(11, 117, 133, 1),
-                          elevation: 9),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 20),
-                        child: Text(
-                          "Siguiente",
-                          style:
-                              TextStyle(fontSize: 22, color: Color(0xFFF1F1F1)),
-                        ),
-                      )),
-                )
+                customButton('Entrar', () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Home()));
+                    // context.read<UsersBloc>().add(Register(
+                    //     email: emailController.text,
+                    //     password: passwordController.text));
+                    print("ok");
+                  }
+                }, context),
               ],
             ),
           ),
