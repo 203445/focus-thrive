@@ -1,14 +1,19 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/home.dart';
-
-import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/login.dart';
 import 'package:focusthrive/onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'features/focusthrive/paciente/presentation/notification/notification_api.dart';
 import 'features/focusthrive/paciente/presentation/pages/suscription.dart';
 import 'features/focusthrive/psicologo/presentation/pages/home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await AndroidAlarmManager.initialize();
+  await initNotifications();
+  // await AlarmAn.init(showDebugLogs: true);
   runApp(const MyApp());
 }
 

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/busqueda.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/perfil.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/prueba.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/suscription.dart';
-import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/home.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/timer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -81,7 +80,13 @@ class _HomeState extends State<Home> {
                                                 height: 40,
                                                 color: Colors.white70,
                                               ),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CountdownPage()));
+                                              },
                                             ),
                                           ),
                                           Container(

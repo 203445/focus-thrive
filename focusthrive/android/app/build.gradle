@@ -29,6 +29,7 @@ android {
     namespace "com.example.focusthrive"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
+    // flutter.compileSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
