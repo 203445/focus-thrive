@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/widgets/buton.dart';
 import 'package:lottie/lottie.dart';
 import 'features/focusthrive/paciente/presentation/pages/login.dart';
 
@@ -198,19 +199,16 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     const SizedBox(
                       height: 30,
                     ),
-                    ElevatedButton(
-                      // style: ,
-                      onPressed: () {
-                        // Navegar a la vista de inicio de sesión
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => LoginPaciente(),
-                        ));
-                      },
-                      child: const Text(
-                        'Iniciar sesión',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
+                    customButton('Iniciar sesión', () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPaciente()));
+                      // context.read<UsersBloc>().add(Register(
+                      //     email: emailController.text,
+                      //     password: passwordController.text));
+                      print("ok inicio");
+                    }, context),
                   ],
                 ),
               ),

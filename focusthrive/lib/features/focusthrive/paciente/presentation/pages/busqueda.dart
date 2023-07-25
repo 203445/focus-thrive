@@ -21,10 +21,10 @@ class _BusquedaState extends State<Busqueda> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
+        preferredSize: Size.fromHeight(90),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 255, 254, 254),
+            color: Color.fromRGBO(11, 117, 133, 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -37,20 +37,23 @@ class _BusquedaState extends State<Busqueda> {
             centerTitle: true,
             toolbarHeight: 100,
             leading: IconButton(
-              icon: const Icon(Icons.navigate_before_rounded,
-                  size: 43, color: Color.fromRGBO(20, 148, 164, 1)),
+              icon: const Icon(
+                Icons.navigate_before_rounded,
+                size: 43,
+                color: Color.fromRGBO(255, 255, 255, 1),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             title: Text(
-              " Psicólogos",
+              "Psicólogos",
               style: GoogleFonts.getFont(
                 'Work Sans',
                 textStyle: const TextStyle(
                   fontSize: 30,
-                  color: Color.fromRGBO(102, 109, 149, 1),
-                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               textAlign: TextAlign.center,

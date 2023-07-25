@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'features/focusthrive/paciente/presentation/bloc/paciente_bloc.dart';
 import 'features/focusthrive/paciente/presentation/widgets/buton.dart';
+import 'features/focusthrive/paciente/presentation/widgets/error_views.dart';
 
 class Registro extends StatefulWidget {
   const Registro({super.key});
@@ -20,266 +25,309 @@ class _MyWidgetState extends State<Registro> {
       TextEditingController();
   final TextEditingController _cardNumberController = TextEditingController();
 
+  File? _file;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-          child: Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRect(
-                        child: Align(
-                          alignment: Alignment.center,
-                          widthFactor: 0.85, // Ancho de la imagen
-                          child: Image.asset(
-                            "assets/img/flor.png",
-                            fit: BoxFit.cover,
-                            width: 120,
+      body: BlocBuilder<PacienteBloc, PacienteState>(builder: (context, state) {
+        if (state is Loading) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color.fromRGBO(11, 117, 133, 1),
+              //     ? DarkModeColors.accentColor
+              //     : LightModeColors.accentColor,
+            ),
+          );
+        }
+        if (state is LoadedPage) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRect(
+                            child: Align(
+                              alignment: Alignment.center,
+                              widthFactor: 0.85, // Ancho de la imagen
+                              child: Image.asset(
+                                "assets/img/flor.png",
+                                fit: BoxFit.cover,
+                                width: 120,
+                              ),
+                            ),
+                          ),
+                          const Text(
+                            "FocusThrive",
+                            style: TextStyle(
+                                fontSize: 35,
+                                color: Color.fromRGBO(126, 150, 170, 35),
+                                fontWeight: FontWeight.w900),
+
+                            // textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    const Text(
+                      "Registro",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Nombre',
+                          filled: true,
+                          errorBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(28)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.red,
+                              )),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(28)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.red,
+                            ),
+                          ),
+                          fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
                           ),
                         ),
                       ),
-                      Text(
-                        "FocusThrive",
-                        style: TextStyle(
-                            fontSize: 35,
-                            color: Color.fromRGBO(126, 150, 170, 35),
-                            fontWeight: FontWeight.w900),
-
-                        // textAlign: TextAlign.right,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  "Registro",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Nombre',
-                      filled: true,
-                      errorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(28)),
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.red,
-                          )),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(28)),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.red,
-                        ),
-                      ),
-                      fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
-                    controller: _lastNameController,
-                    decoration: InputDecoration(
-                      labelText: 'Apellidos',
-                      filled: true,
-                      errorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(28)),
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.red,
-                          )),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(28)),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.red,
-                        ),
-                      ),
-                      fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
-                    controller: _correoController,
-                    decoration: InputDecoration(
-                      labelText: 'Correo',
-                      filled: true,
-                      errorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(28)),
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.red,
-                          )),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(28)),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.red,
-                        ),
-                      ),
-                      fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Contraseña',
-                      filled: true,
-                      errorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(28)),
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.red,
-                          )),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(28)),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.red,
-                        ),
-                      ),
-                      fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                    ),
-                    obscureText: true,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: TextFormField(
-                    controller: _confirmPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Confirmar Contraseña',
-                      filled: true,
-                      errorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(28)),
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.red,
-                          )),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(28)),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.red,
-                        ),
-                      ),
-                      fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
-                        borderSide: const BorderSide(
-                            color: Color.fromRGBO(20, 148, 164, 1)),
-                      ),
-                    ),
-                    obscureText: true,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                customButton('Siguiente', () {
-                  if (_passwordController.text ==
-                      _confirmPasswordController.text) {
-                    // Redirigir a la siguiente vista según la selección del usuario
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserTypeScreen(),
-                      ),
-                    );
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Las contraseñas no coinciden.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('Cerrar'),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        controller: _lastNameController,
+                        decoration: InputDecoration(
+                          labelText: 'Apellidos',
+                          filled: true,
+                          errorBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(28)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.red,
+                              )),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(28)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.red,
                             ),
-                          ],
+                          ),
+                          fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        controller: _correoController,
+                        decoration: InputDecoration(
+                          labelText: 'Correo',
+                          filled: true,
+                          errorBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(28)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.red,
+                              )),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(28)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.red,
+                            ),
+                          ),
+                          fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Contraseña',
+                          filled: true,
+                          errorBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(28)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.red,
+                              )),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(28)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.red,
+                            ),
+                          ),
+                          fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                        ),
+                        obscureText: true,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        controller: _confirmPasswordController,
+                        decoration: InputDecoration(
+                          labelText: 'Confirmar Contraseña',
+                          filled: true,
+                          errorBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(28)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.red,
+                              )),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(28)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.red,
+                            ),
+                          ),
+                          fillColor: const Color.fromRGBO(211, 237, 234, 0.358),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(20, 148, 164, 1)),
+                          ),
+                        ),
+                        obscureText: true,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    customButton('Siguiente', () {
+                      if (_passwordController.text ==
+                          _confirmPasswordController.text) {
+                        // Redirigir a la siguiente vista según la selección del usuario
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserTypeScreen(
+                              name: _nameController.text,
+                              lastName: _lastNameController.text,
+                              email: _correoController.text,
+                              password: _confirmPasswordController.text,
+                              file: _file,
+                            ),
+                          ),
                         );
-                      },
-                    );
-                  }
-                }, context),
-              ],
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Error'),
+                              content: Text('Las contraseñas no coinciden.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('Cerrar'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    }, context),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
+          );
+        } else if (state is Error) {
+          return const ErrorView();
+        } else {
+          return Container();
+        }
+      }),
     );
   }
 }
 
 class UserTypeScreen extends StatelessWidget {
+  final String name;
+  final String lastName;
+  final String email;
+  final String password;
+  final File? file;
+
   final TextEditingController _cardNumberController = TextEditingController();
 
-  UserTypeScreen({super.key});
+  UserTypeScreen(
+      {super.key,
+      required this.name,
+      required this.lastName,
+      required this.email,
+      required this.password,
+      required this.file});
 
   @override
   Widget build(BuildContext context) {
@@ -296,13 +344,23 @@ class UserTypeScreen extends StatelessWidget {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Redirigir a la vista para pacientes
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PatientScreen(),
-                  ),
-                );
+                context.read<PacienteBloc>().add(CreatePaciente(
+                    nombre: name,
+                    apellido: lastName,
+                    urlfoto: file,
+                    correo: email,
+                    telefono: '',
+                    password: password,
+                    plan: "ninguno",
+                    tarjeta: ""));
+
+                // // Redirigir a la vista para pacientes
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => PatientScreen(),
+                //   ),
+                // );
               },
               child: Text('Paciente'),
             ),

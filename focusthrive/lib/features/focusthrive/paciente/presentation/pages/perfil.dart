@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/cuentaP.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/login.dart';
+import 'package:focusthrive/onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../bloc/paciente_bloc.dart';
 
 class Perfil extends StatefulWidget {
   const Perfil({super.key});
@@ -17,7 +22,7 @@ class _PerfilState extends State<Perfil> {
         preferredSize: Size.fromHeight(80),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromRGBO(255, 255, 255, 1),
+            color: Color.fromRGBO(11, 117, 133, 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -33,7 +38,7 @@ class _PerfilState extends State<Perfil> {
               icon: const Icon(
                 Icons.navigate_before_rounded,
                 size: 43,
-                color: Color.fromRGBO(20, 148, 164, 1),
+                color: Color.fromRGBO(255, 255, 255, 1),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -45,8 +50,8 @@ class _PerfilState extends State<Perfil> {
                 'Work Sans',
                 textStyle: const TextStyle(
                   fontSize: 30,
-                  color: Color.fromRGBO(77, 95, 111, 1),
-                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               textAlign: TextAlign.center,
@@ -211,7 +216,17 @@ class _PerfilState extends State<Perfil> {
                           width: 1.0,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        context.read<PacienteBloc>().add(Logout());
+
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OnboardingScreen()),
+                          );
+                        });
+                      },
                       child: Text(
                         "Cerrar Sesión",
                         style: GoogleFonts.getFont(
