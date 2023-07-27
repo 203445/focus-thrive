@@ -11,18 +11,21 @@ class PsicologoModels extends Psicologo {
       required String descripcion,
       required String ubicacion,
       required String telefono,
-      required String numerotarjeta})
+      required String numerotarjeta,
+      required int rating})
       : super(
-            id: id,
-            nombre: nombre,
-            apellidos: apellidos,
-            contrasena: contrasena,
-            urlFoto: urlFoto,
-            correo: correo,
-            description: descripcion,
-            ubicacion: ubicacion,
-            telefono: telefono,
-            numerotarjeta: numerotarjeta);
+          id: id,
+          nombre: nombre,
+          apellidos: apellidos,
+          contrasena: contrasena,
+          urlFoto: urlFoto,
+          correo: correo,
+          description: descripcion,
+          ubicacion: ubicacion,
+          telefono: telefono,
+          numerotarjeta: numerotarjeta,
+          rating: rating,
+        );
 
   factory PsicologoModels.fromJson(Map<String, dynamic> json) {
     return PsicologoModels(
@@ -35,20 +38,23 @@ class PsicologoModels extends Psicologo {
         descripcion: json["descripcion"].toString(),
         ubicacion: json["ubicacion"].toString(),
         telefono: json["telefono"].toString(),
-        numerotarjeta: json["numero_tarjeta"].toString());
+        numerotarjeta: json["numero_tarjeta"].toString(),
+        rating: json["rating "]);
   }
 
   factory PsicologoModels.fromEntity(Psicologo psicologo) {
     return PsicologoModels(
-        id: psicologo.id,
-        nombre: psicologo.nombre,
-        apellidos: psicologo.apellidos,
-        urlFoto: psicologo.urlFoto,
-        contrasena: psicologo.contrasena,
-        correo: psicologo.correo,
-        descripcion: psicologo.description,
-        ubicacion: psicologo.ubicacion,
-        telefono: psicologo.telefono,
-        numerotarjeta: psicologo.numerotarjeta);
+      id: psicologo.id,
+      nombre: psicologo.nombre,
+      apellidos: psicologo.apellidos,
+      urlFoto: psicologo.urlFoto,
+      contrasena: psicologo.contrasena,
+      correo: psicologo.correo,
+      descripcion: psicologo.description,
+      ubicacion: psicologo.ubicacion,
+      telefono: psicologo.telefono,
+      numerotarjeta: psicologo.numerotarjeta,
+      rating: psicologo.rating,
+    );
   }
 }

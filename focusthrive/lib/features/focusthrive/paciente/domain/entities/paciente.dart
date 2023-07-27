@@ -7,7 +7,7 @@ class Paciente {
   final String numerotarjeta;
   final String correo;
   final String telefono;
-  final String esPremium;
+  final bool esPremium;
 
   Paciente(
       {required this.id,
@@ -25,10 +25,26 @@ class Paciente {
       'id:': id,
       'nombre': nombre,
       'apellidos': apellidos,
+      'telefono': telefono,
+      'correo': correo,
       'contrasena': contrasena,
-      'urlFoto': urlFoto,
       'numerotarjeta': numerotarjeta,
-      'esPremium': esPremium
+      'esPremium': esPremium,
+      'urlFoto': urlFoto,
     };
+  }
+
+  factory Paciente.fromJson(Map<String, dynamic> json) {
+    return Paciente(
+      id: json['id'],
+      nombre: json['nombre'],
+      apellidos: json['apellidos'],
+      telefono: json['telefono'],
+      correo: json['correo'],
+      contrasena: json['passw'],
+      numerotarjeta: json['ntarjeta'],
+      esPremium: json['es_premium'],
+      urlFoto: json['image'],
+    );
   }
 }

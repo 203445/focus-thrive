@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PremiumSubscriptionView extends StatelessWidget {
   const PremiumSubscriptionView({super.key});
@@ -6,16 +7,55 @@ class PremiumSubscriptionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Plan Premium'),
-        backgroundColor: Colors.white,
-        elevation: 5,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(255, 255, 255, 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: AppBar(
+            centerTitle: true,
+            toolbarHeight: 100,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.navigate_before_rounded,
+                size: 43,
+                color: Color.fromRGBO(20, 148, 164, 1),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              "Unete",
+              style: GoogleFonts.getFont(
+                'Work Sans',
+                textStyle: const TextStyle(
+                  fontSize: 30,
+                  color: Color.fromRGBO(77, 95, 111, 1),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 30),
               Text(
                 'Elige tu plan Premium',
                 style: TextStyle(
@@ -59,6 +99,7 @@ class PremiumSubscriptionView extends StatelessWidget {
                   style: TextStyle(fontSize: 18),
                 ),
               ),
+              SizedBox(height: 30)
             ],
           ),
         ),

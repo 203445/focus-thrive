@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -94,12 +95,12 @@ class _CountdownPageState extends State<CountdownPage>
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  width: 300,
-                  height: 300,
+                  width: 250,
+                  height: 250,
                   child: CircularProgressIndicator(
                     backgroundColor: Colors.grey.shade300,
                     value: progress,
-                    strokeWidth: 20,
+                    strokeWidth: 10,
                   ),
                 ),
                 GestureDetector(
@@ -126,7 +127,7 @@ class _CountdownPageState extends State<CountdownPage>
                     builder: (context, child) => Text(
                       countText,
                       style: TextStyle(
-                        fontSize: 60,
+                        fontSize: 50,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -136,18 +137,24 @@ class _CountdownPageState extends State<CountdownPage>
                   AnimatedOpacity(
                     opacity: finish ? 1.0 : 0.0,
                     duration: Duration(milliseconds: 1500),
-                    child: Lottie.asset(
-                      "assets/json/success.json", // Reemplaza "your_finish_animation" con el nombre de tu archivo de animación
-                      // repeat: false,
+                    child: Transform.scale(
+                      scale: 0.95,
+                      child: Lottie.asset(
+                        "assets/json/success.json", // Reemplaza "your_finish_animation" con el nombre de tu archivo de animación
+                        // repeat: false,
+                      ),
                     ),
                   ),
                 if (showTimeUpAnimation) // Mostrar la animación de tiempo agotado
                   AnimatedOpacity(
                     opacity: showTimeUpAnimation ? 1.0 : 0.0,
                     duration: Duration(milliseconds: 1500),
-                    child: Lottie.asset(
-                      "assets/json/sad.json", // Reemplaza "your_time_up_animation" con el nombre de tu archivo de animación
-                      // repeat: false,
+                    child: Transform.scale(
+                      scale: 0.70,
+                      child: Lottie.asset(
+                        "assets/json/sad.json", // Reemplaza "your_time_up_animation" con el nombre de tu archivo de animación
+                        // repeat: false,
+                      ),
                     ),
                   ),
               ],

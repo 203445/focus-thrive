@@ -24,13 +24,14 @@ class _LoginPacienteState extends State<LoginPaciente> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       body: BlocBuilder<PacienteBloc, PacienteState>(builder: (context, state) {
-        if (state is VerificandoPaciente) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Color.fromRGBO(11, 117, 133, 1),
-            ),
-          );
-        } else if (state is PacienteVerificado) {
+        // if (state is VerificandoPaciente) {
+        //   return const Center(
+        //     child: CircularProgressIndicator(
+        //       color: Color.fromRGBO(11, 117, 133, 1),
+        //     ),
+        //   );
+        // } else
+        if (state is PacienteVerificado) {
           if (state.token == true) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.push(
@@ -41,25 +42,34 @@ class _LoginPacienteState extends State<LoginPaciente> {
               );
             });
           } else {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Error de inicio de sesión'),
-                  content: const Text(
-                      'Credenciales inválidas. Por favor, inténtalo de nuevo.'),
-                  actions: [
-                    TextButton(
-                      child: const Text('Cerrar'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Error de inicio de sesión'),
+                    content: const Text(
+                        'Credenciales inválidas. Por favor, inténtalo de nuevo.'),
+                    actions: [
+                      TextButton(
+                        child: const Text('Cerrar'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
           }
+          //
+        } else if (state is VerificandoPaciente) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color.fromRGBO(11, 117, 133, 1),
+            ),
+          );
         } else {
           return SingleChildScrollView(
             child: Center(

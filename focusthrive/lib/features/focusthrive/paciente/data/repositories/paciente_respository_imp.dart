@@ -33,7 +33,8 @@ class PacienteRepositoryImp extends PacienteRepository {
   Future<bool> loginPaciente(String correo, String password) async {
     return await pacienteRemoteDataSource.loginPaciente(correo, password);
   }
-
+  
+  @override
   Future<void> cerrarSesion() async {
     return await pacienteRemoteDataSource.cerrarSesion();
   }

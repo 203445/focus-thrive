@@ -10,16 +10,12 @@ final dio = Dio();
 String apiURI = 'http://23.22.105.14/tarea';
 
 abstract class TareaRemoteDataSource {
-  // Future<bool> verifyExistence(String email);
   Future<ent.Tarea?> createTarea(String titulo, String description,
       String fechaInicio, String fechaFinal, String userId, String status);
-  // Future<bool> addContact(String email, String id);
+
   Future<List<ent.Tarea>> getTarea(String id);
 
-  // Future<List<ent.User>> getContacts(String id);
-  // Future<bool> updateProfile(String id, String name, String data, File? img);
-  // Future<ent.User?> getUser(String id);
-  // Future<ent.User?> getFireId(String idFirebase);
+  Future<bool> deleteTarea(String id);
 }
 
 class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
@@ -31,20 +27,6 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
       String fechaFinal,
       String userId,
       String status) async {
-    // FormData formData;
-
-    // formData = FormData.fromMap({
-    //   "titulo": titulo,
-    //   "descripcion": description,
-    //   "fecha_inicio": fechaInicio,
-    //   "fecha_fin": fechaFinal,
-    //   "user_id": userId,
-    //   "status": status,
-    // });
-    // Imprime el contenido del FormData
-    // formData.fields.forEach((entry) {
-    //   print("${entry.key}: ${entry.value}");
-    // });
     Map<String, dynamic> data = {
       "titulo": titulo,
       "descripcion": description,
@@ -73,32 +55,52 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
   @override
   Future<List<ent.Tarea>> getTarea(String id) async {
     Map<String, dynamic> data = {
-      "id": id,
+      "id": 1,
     };
-    final response = await dio.get(
-      "$apiURI/get/",
+    final response = await dio.post(
+      "http://23.22.105.14/tarea/get",
       data: jsonEncode(data),
     );
     if (response.statusCode == 200) {
-      List<ent.Tarea> contactsList = [];
-      var contacts = response.data['contacts'];
+      List<ent.Tarea> tarealist = [];
 
-      if (contacts.length > 0) {
-        for (var object in contacts) {
-          contactsList.add(ent.Tarea(
-              id: object['id'].toString(),
-              titulo: object['titulo'].toString(),
-              description: object['description'].toString(),
-              fechaInicio: object['fecha_inicio'].toString(),
-              fechaFinal: object['fecha_fin'].toString(),
-              userId: object['user_id'].toString(),
-              status: object['status'].toString()));
-        }
+      List<dynamic> jsonList = response.data;
+
+      for (var jsonTarea in jsonList) {
+        tarealist.add(ent.Tarea(
+          id: jsonTarea['id'].toString(),
+          titulo: jsonTarea['titulo'].toString(),
+          description: jsonTarea['descripcion'].toString(),
+          fechaInicio: jsonTarea['fecha_inicio'].toString(),
+          fechaFinal: jsonTarea['fecha_fin'].toString(),
+          userId: jsonTarea['user_id'].toString(),
+          status: jsonTarea['status'].toString(),
+        ));
       }
-      return contactsList;
+      return tarealist;
     }
     return [];
   }
 
-  
+  @override
+  Future<bool> deleteTarea(String id) async {
+    Map<String, dynamic> data = {
+      "id": id,
+    };
+    final response = await dio.post(
+      "http://23.22.105.14/tarea/delete",
+      data: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      if (response.data == true) {
+        print('Se eliminó correctamente');
+        return response.data;
+      } else {
+        print('no se puede eliminar correctamente');
+        return response.data;
+      }
+    }
+    return false;
+  }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:focusthrive/features/focusthrive/paciente/domain/entities/paciente.dart'
     as ent;
 import 'package:dio/dio.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/bloc/paciente_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:path_provider/path_provider.dart';
@@ -18,7 +17,7 @@ Future<File> getImageFileFromAssets() async {
   const String path = 'img/default-user.png';
   final byteData = await rootBundle.load('assets/$path');
 
-  final file = File('${(await getTemporaryDirectory())}');
+  final file = File("${(await getTemporaryDirectory()).path}/$path");
   await file.create(recursive: true);
   await file.writeAsBytes(byteData.buffer
       .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
@@ -27,7 +26,6 @@ Future<File> getImageFileFromAssets() async {
 }
 
 abstract class PacienteRemoteDataSource {
-  // Future<bool> verifyExistence(String email);
   Future<bool> createProfile(
       String nombre,
       String apellido,
@@ -41,9 +39,6 @@ abstract class PacienteRemoteDataSource {
   Future<ent.Paciente?> getPaciente(String id);
   Future<bool> loginPaciente(String correo, String password);
   Future<void> cerrarSesion();
-  // Future<bool> updateProfile(String id, String name, String data, File? img);
-  // Future<ent.User?> getUser(String id);
-  // Future<ent.User?> getFireId(String idFirebase);
 }
 
 class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
@@ -81,12 +76,11 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
         "correo": correo,
       });
     }
-    // Imprime el contenido del FormData
-    // formData.fields.forEach((entry) {
-    //   print("${entry.key}: ${entry.value}");
-    // });
+    print('hola');
+    print(formData.toString);
 
-    final response = await dio.post("$apiURI/create", data: formData);
+    final response =
+        await dio.post("http://54.147.89.61/cliente/create", data: formData);
     print(response.data);
 
     return response.data;
@@ -94,31 +88,28 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
 
   @override
   Future<ent.Paciente?> getPaciente(String id) async {
-    const String token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRhOWY0ZTg4LTE2OGUtNDg5ZS04N2IxLTMzZTAyMTFkZTAxOCIsImlhdCI6MTY5MDE3MzI2NywiZXhwIjoxNjkwMjA5MjY3fQ.rVkcsM_sL7OCsev69S2rHkF54EiYzX0Cl2yJ4XdMcNc';
-
-    Map<String, dynamic> data = {
-      "id": id,
-    };
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token_P');
 
     final response = await dio.get(
-      "$apiURI/cliente/get ",
-      data: jsonEncode(data),
+      "http://54.147.89.61/cliente/get",
       options: Options(
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': token,
         },
       ),
     );
-    // Comprueba si la solicitud fue exitosa
+
     if (response.statusCode == 200) {
-      // Procesa los datos aquí si es necesario
       print('Datos recibidos: ${response.data}');
+
+      // Convierte el JSON del paciente a un objeto ent.Paciente
+      ent.Paciente paciente = ent.Paciente.fromJson(response.data);
+      return paciente;
     } else {
-      // Si la solicitud no fue exitosa, muestra el código de estado y el mensaje de error
       print('Error: ${response.statusCode}, ${response.statusMessage}');
+      return null;
     }
-    return response.data;
   }
 
   @override
@@ -136,16 +127,32 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
 
       if (response.statusCode == 200) {
         var token = response.data["token"];
+        print(token);
 
         if (token != null && token.isNotEmpty) {
           // Guardar el token en SharedPreferences
-          await sharedPreferences.setString('user_token', token);
+          await sharedPreferences.setString('user_token_P', token);
           // Guardar en local_Storage si es necesario
+
           return true;
         }
       }
+      // return false;
     } catch (e) {
-      print('Error en la solicitud: $e');
+      if (e is DioException) {
+        // Si es un error de Dio (por ejemplo, tiempo de espera agotado)
+        if (e.type == DioExceptionType.connectionTimeout) {
+          print("Error: Tiempo de conexión agotado.");
+        } else if (e.type == DioExceptionType.badResponse) {
+          print(
+              "Error: Respuesta no válida del servidor ${e.response?.statusCode} ${e.response?.statusMessage}");
+        } else {
+          print("Error: $e");
+        }
+      } else {
+        // Otras excepciones que no sean de Dio
+        print("Error: $e");
+      }
     }
 
     return false;
@@ -158,7 +165,5 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
     await sharedPreferences.remove('user_token');
 
     print(sharedPreferences.get('user_token'));
-
-    
   }
 }

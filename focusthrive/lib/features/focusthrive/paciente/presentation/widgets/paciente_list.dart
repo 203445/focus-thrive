@@ -18,8 +18,8 @@ class _PsicologoListState extends State<PsicologoList> {
       width: double.infinity,
       margin: EdgeInsets.all(2),
       child: Card(
-        color: Color.fromRGBO(220, 228, 229, 1),
-        elevation: 1,
+        color: Color.fromRGBO(253, 255, 255, 1),
+        elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -38,7 +38,7 @@ class _PsicologoListState extends State<PsicologoList> {
                 style: GoogleFonts.getFont(
                   'Work Sans',
                   textStyle: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 17,
                     color: Color.fromRGBO(75, 95, 111, 1),
                     fontWeight: FontWeight.w600,
                   ),

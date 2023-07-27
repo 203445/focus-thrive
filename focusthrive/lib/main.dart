@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/bloc/paciente_bloc.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/home.dart';
 import 'package:focusthrive/onboarding.dart';
@@ -8,8 +12,7 @@ import 'package:focusthrive/usecase_config.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'features/focusthrive/paciente/presentation/notification/notification_api.dart';
-import 'features/focusthrive/paciente/presentation/pages/suscription.dart';
-import 'features/focusthrive/psicologo/presentation/pages/home.dart';
+import 'features/focusthrive/paciente/presentation/pages/encuesta.dart';
 
 UsecaseConfig usecaseConfig = UsecaseConfig();
 
@@ -18,7 +21,13 @@ void main() async {
 
   await AndroidAlarmManager.initialize();
   await initNotifications();
+
   runApp(const MyApp());
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    if (Platform.isAndroid) {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -35,10 +44,12 @@ class MyApp extends StatelessWidget {
               getPacienteUseCase: usecaseConfig.getPacienteUseCase!,
               createProfileUseCase: usecaseConfig.createProfileUseCase!,
               loginPacienteUseCase: usecaseConfig.loginPacienteUseCase!,
-              cerrarSesionUseCase: usecaseConfig.cerrarSesionUseCase!),
+              cerrarSesionUseCase: usecaseConfig.cerrarSesionUseCase!,
+              getTareaUseCase: usecaseConfig.getTareaUseCase!),
         ),
       ],
       child: MaterialApp(
+        builder: FToastBuilder(),
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
@@ -48,7 +59,11 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: const OnboardingScreen(),
+        // home: const OnboardingScreen(),
+        // home: OnboardingScreen(),
+        // home: const Home(),
+        home: SurveyView(),
+        // home: MySample(),
       ),
     );
   }

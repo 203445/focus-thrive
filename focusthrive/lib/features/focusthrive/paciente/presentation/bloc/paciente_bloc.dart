@@ -6,11 +6,12 @@ import 'package:focusthrive/features/focusthrive/paciente/domain/entities/pacien
 // import 'package:focusthrive/features/focusthrive/paciente/domain/entities/paciente.dart';
 import 'package:focusthrive/features/focusthrive/paciente/domain/entities/tarea.dart';
 
-import '../../domain/usecases/cerrar_sesion.dart';
-import '../../domain/usecases/create_profile_usecases.dart';
-import '../../domain/usecases/create_tarea_usecases.dart';
-import '../../domain/usecases/get_paciente_usecases.dart';
-import '../../domain/usecases/login_paciente.dart';
+import '../../domain/usecases/paciente/cerrar_sesion.dart';
+import '../../domain/usecases/paciente/create_profile_usecases.dart';
+import '../../domain/usecases/tarea/create_tarea_usecases.dart';
+import '../../domain/usecases/paciente/get_paciente_usecases.dart';
+import '../../domain/usecases/paciente/login_paciente.dart';
+import '../../domain/usecases/tarea/get_tarea_usecases.dart';
 part 'paciente_event.dart';
 part 'paciente_state.dart';
 
@@ -20,6 +21,7 @@ class PacienteBloc extends Bloc<PacienteEvent, PacienteState> {
   final CreateProfileUseCase createProfileUseCase;
   final LoginPacienteUseCase loginPacienteUseCase;
   final CerrarSesionUseCase cerrarSesionUseCase;
+  final GetTareaUseCase getTareaUseCase;
 
   PacienteBloc({
     required this.createTareaUseCase,
@@ -27,9 +29,28 @@ class PacienteBloc extends Bloc<PacienteEvent, PacienteState> {
     required this.createProfileUseCase,
     required this.loginPacienteUseCase,
     required this.cerrarSesionUseCase,
+    required this.getTareaUseCase,
   }) : super(LoadedPage()) {
     on<PacienteEvent>((event, emit) async {
-      if (event is CreatePaciente) {
+      if (event is Presslogin) {
+       
+        try {
+          emit(Loading());
+          bool response =
+              await loginPacienteUseCase.execute(event.correo, event.password);
+          if (response == true) {
+            emit(PacienteVerificado(token: true));
+            await Future.delayed(const Duration(milliseconds: 25000), () {
+              emit(LoadedPage());
+            });
+          } else {
+            emit(PacienteVerificado(token: false));
+          }
+        } catch (e) {
+          emit(ErrorLoginPaciente(message: e.toString()));
+        }
+        // } else if (event is SignedHome){
+      } else if (event is CreatePaciente) {
         try {
           emit(Loading());
           print('crear usuario');
@@ -42,8 +63,11 @@ class PacienteBloc extends Bloc<PacienteEvent, PacienteState> {
               event.password,
               event.plan,
               event.tarjeta);
-          if (response == false) {
-            emit(Error(error: "Actualmente este correo está en uso"));
+          print(response);
+          if (response == true) {
+            emit(PacienteCreado(created: response));
+          } else {
+            emit(Error(error: "Ocurrio un error creando la cuenta"));
             await Future.delayed(const Duration(milliseconds: 2500), () {
               emit(LoadedPage());
             });
@@ -86,22 +110,13 @@ class PacienteBloc extends Bloc<PacienteEvent, PacienteState> {
         } catch (e) {
           emit(Error(error: e.toString()));
         }
-      } else if (event is Presslogin) {
-        try {
-          emit(VerificandoPaciente());
-          bool response =
-              await loginPacienteUseCase.execute(event.correo, event.password);
-          if (response) {
-            emit(PacienteVerificado(token: true));
-          } else {
-            emit(PacienteVerificado(token: false));
-            emit(LoginSuccess());
-          }
-        } catch (e) {
-          emit(ErrorLoginPaciente(message: e.toString()));
-        }
-      } else if (event is Logout) {
+      }
+
+      // else if(event is SignedInHome)
+      else if (event is Logout) {
         await cerrarSesionUseCase.execute();
+      } else {
+        emit(InitialState());
       }
     });
   }

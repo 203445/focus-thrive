@@ -1,14 +1,21 @@
 import 'dart:io';
-import 'package:focusthrive/features/focusthrive/psicologo/domain/entities/psicologo.dart';
+
+import '../entities/psicologo.dart';
 
 abstract class PsicologoRepository {
-  Future<Psicologo?> createProfile(
-      String nombre,
-      String apellidos,
-      File? urlFoto,
-      String correo,
-      String telefono,
-      String contrasena,
-      String esPremium,
-      String numerotarjeta);
+  Future<bool> createProfile(
+    String nombre,
+    String apellidos,
+    String telefono,
+    String contrasena,
+    File? urlFoto,
+    String descripcion,
+    String ubicacion,
+    String numerotarjeta,
+    String correo,
+    String rating,
+  );
+  Future<bool> loginPsicologo(String correo, String password);
+  Future<Psicologo?> getPsicologo();
+  Future<List<Psicologo?>> getAllPsicologos();
 }

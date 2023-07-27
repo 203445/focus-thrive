@@ -23,6 +23,9 @@ class TareaRepositoryImp implements TareaRepository {
   Future<List<Tarea>> getTarea(String id) async {
     return await tareaRemoteDataSource.getTarea(id);
   }
-  
- 
+
+  @override
+  Future<bool> deleteTarea(String id) async {
+    return await tareaRemoteDataSource.deleteTarea(id);
+  }
 }

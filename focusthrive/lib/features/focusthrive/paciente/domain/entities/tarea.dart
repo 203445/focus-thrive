@@ -28,4 +28,16 @@ class Tarea {
       'status': status,
     };
   }
+
+  factory Tarea.fromJson(Map<String, dynamic> json) {
+    return Tarea(
+      id: json['id'],
+      titulo: json['titulo'],
+      description: json['descripcion'],
+      fechaInicio: json['fecha_inicio'],
+      fechaFinal: json['fecha_fin'],
+      userId: json['user_id'],
+      status: json['status'],
+    );
+  }
 }

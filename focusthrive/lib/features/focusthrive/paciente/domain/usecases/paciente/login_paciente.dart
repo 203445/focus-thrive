@@ -1,4 +1,3 @@
-import 'package:focusthrive/features/focusthrive/paciente/domain/entities/paciente.dart';
 import 'package:focusthrive/features/focusthrive/paciente/domain/repositories/paciente_repository.dart';
 
 class LoginPacienteUseCase {

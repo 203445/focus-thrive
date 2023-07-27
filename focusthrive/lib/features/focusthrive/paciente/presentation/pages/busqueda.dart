@@ -14,6 +14,7 @@ class _BusquedaState extends State<Busqueda> {
     UserData('JANETH ALEJANDRA MORALES MENDOZA', 4.6),
     UserData('Hola que tallll  2', 3.8),
     UserData('Usuario 3', 5.0),
+    UserData('Usuario 3', 5.0),
     // Agrega más datos de usuarios aquí...
   ];
 

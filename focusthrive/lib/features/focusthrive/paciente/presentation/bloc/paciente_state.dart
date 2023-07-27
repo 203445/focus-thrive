@@ -42,4 +42,13 @@ class ErrorLoginPaciente extends PacienteState {
   final String message;
 
   ErrorLoginPaciente({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class PacienteCreado extends PacienteState {
+  final bool created;
+
+  PacienteCreado({required this.created});
 }
