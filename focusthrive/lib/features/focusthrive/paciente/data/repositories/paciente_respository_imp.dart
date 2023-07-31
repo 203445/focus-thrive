@@ -33,9 +33,26 @@ class PacienteRepositoryImp extends PacienteRepository {
   Future<bool> loginPaciente(String correo, String password) async {
     return await pacienteRemoteDataSource.loginPaciente(correo, password);
   }
-  
+
   @override
   Future<void> cerrarSesion() async {
     return await pacienteRemoteDataSource.cerrarSesion();
+  }
+
+  @override
+  Future<bool> updatePaciente(String id, String name, String apellido,
+      String email, String telefono, String descripcion) async {
+    return await pacienteRemoteDataSource.updatePaciente(
+        id, name, apellido, email, telefono, descripcion);
+  }
+
+  @override
+  Future<bool> undoPlanPaciente(String id) async {
+    return await pacienteRemoteDataSource.undoPlanPaciente(id);
+  }
+
+  @override
+  Future<bool> updatePlanPaciente(String id) async {
+    return await pacienteRemoteDataSource.updatePlanPaciente(id);
   }
 }

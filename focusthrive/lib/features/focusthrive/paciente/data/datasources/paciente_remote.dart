@@ -39,6 +39,10 @@ abstract class PacienteRemoteDataSource {
   Future<ent.Paciente?> getPaciente(String id);
   Future<bool> loginPaciente(String correo, String password);
   Future<void> cerrarSesion();
+  Future<bool> updatePaciente(String id, String name, String apellido,
+      String email, String telefono, String descripcion);
+  Future<bool> undoPlanPaciente(String id);
+  Future<bool> updatePlanPaciente(String id);
 }
 
 class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
@@ -127,7 +131,7 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
 
       if (response.statusCode == 200) {
         var token = response.data["token"];
-        print(token);
+        // print(token);
 
         if (token != null && token.isNotEmpty) {
           // Guardar el token en SharedPreferences
@@ -165,5 +169,145 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
     await sharedPreferences.remove('user_token');
 
     print(sharedPreferences.get('user_token'));
+  }
+
+  @override
+  Future<bool> undoPlanPaciente(String id) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token_P');
+    Map<String, dynamic> data = {
+      "id": id,
+    };
+
+    try {
+      final response = await dio.get(
+        "http://54.147.89.61/cliente/undoTopremium",
+        data: jsonEncode(data),
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print('Datos recibidos: ${response.data}');
+        if (response.data == true) return true;
+      } else {
+        print('Error: ${response.statusCode}, ${response.statusMessage}');
+        return false;
+      }
+      // return false;
+    } catch (e) {
+      if (e is DioException) {
+        // Si es un error de Dio (por ejemplo, tiempo de espera agotado)
+        if (e.type == DioExceptionType.connectionTimeout) {
+          print("Error: Tiempo de conexión agotado.");
+        } else if (e.type == DioExceptionType.badResponse) {
+          print(
+              "Error: Respuesta no válida del servidor ${e.response?.statusCode} ${e.response?.statusMessage}");
+        } else {
+          print("Error: $e");
+        }
+      } else {
+        // Otras excepciones que no sean de Dio
+        print("Error: $e");
+      }
+    }
+
+    return false;
+  }
+
+  @override
+  Future<bool> updatePaciente(String id, String name, String apellido,
+      String email, String telefono, String descripcion) async {
+    Map<String, dynamic> data = {
+      "nombre": name,
+      "apellidos": apellido,
+      "telefono": telefono,
+      "id": id,
+    };
+
+    try {
+      final response = await dio.get(
+        "http://54.147.89.61/cliente/update",
+        data: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200) {
+        print('Datos recibidos: ${response.data}');
+        if (response.data == true) return true;
+      } else {
+        print('Error: ${response.statusCode}, ${response.statusMessage}');
+        return false;
+      }
+      // return false;
+    } catch (e) {
+      if (e is DioException) {
+        // Si es un error de Dio (por ejemplo, tiempo de espera agotado)
+        if (e.type == DioExceptionType.connectionTimeout) {
+          print("Error: Tiempo de conexión agotado.");
+        } else if (e.type == DioExceptionType.badResponse) {
+          print(
+              "Error: Respuesta no válida del servidor ${e.response?.statusCode} ${e.response?.statusMessage}");
+        } else {
+          print("Error: $e");
+        }
+      } else {
+        // Otras excepciones que no sean de Dio
+        print("Error: $e");
+      }
+      return false;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> updatePlanPaciente(String id) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token_P');
+    Map<String, dynamic> data = {
+      "id": id,
+    };
+
+    try {
+      final response = await dio.get(
+        "http://54.147.89.61/cliente/updateTopremium",
+        data: jsonEncode(data),
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print('Datos recibidos: ${response.data}');
+        if (response.data == true) return true;
+      } else {
+        print('Error: ${response.statusCode}, ${response.statusMessage}');
+        return false;
+      }
+      // return false;
+    } catch (e) {
+      if (e is DioException) {
+        // Si es un error de Dio (por ejemplo, tiempo de espera agotado)
+        if (e.type == DioExceptionType.connectionTimeout) {
+          print("Error: Tiempo de conexión agotado.");
+        } else if (e.type == DioExceptionType.badResponse) {
+          print(
+              "Error: Respuesta no válida del servidor ${e.response?.statusCode} ${e.response?.statusMessage}");
+        } else {
+          print("Error: $e");
+        }
+      } else {
+        // Otras excepciones que no sean de Dio
+        print("Error: $e");
+      }
+      return false;
+    }
+    return false;
   }
 }

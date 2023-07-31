@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CuentaP extends StatefulWidget {
-  const CuentaP({super.key});
+  final String name;
+  final String correo;
+  final String telefono;
+  final String apellidos;
+  const CuentaP({
+    super.key,
+    required this.name,
+    required this.apellidos,
+    required this.telefono,
+    required this.correo,
+  });
 
   @override
   _CuentaPState createState() => _CuentaPState();
@@ -75,7 +85,9 @@ class _CuentaPState extends State<CuentaP> {
                           child: Column(
                             children: [
                               TextFormField(
-                                // controller: emailController,
+                                // controller: widget.name,
+                                initialValue:
+                                    "${widget.name} ${widget.apellidos} ",
                                 cursorColor:
                                     const Color.fromRGBO(11, 117, 133, 1),
                                 decoration: InputDecoration(
@@ -113,16 +125,17 @@ class _CuentaPState extends State<CuentaP> {
                                   prefixIcon: Icon(Icons.person),
                                 ),
                                 style: const TextStyle(fontSize: 20),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Por favor, ingresa un usuario';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value!.isEmpty) {
+                                //     return 'Por favor, ingresa un usuario';
+                                //   }
+                                //   return null;
+                                // },
                               ),
                               const SizedBox(height: 30),
                               TextFormField(
                                 // controller: emailController,
+                                initialValue: widget.correo,
                                 cursorColor:
                                     const Color.fromRGBO(11, 117, 133, 1),
                                 decoration: InputDecoration(
@@ -160,12 +173,12 @@ class _CuentaPState extends State<CuentaP> {
                                   prefixIcon: Icon(Icons.email),
                                 ),
                                 style: const TextStyle(fontSize: 20),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Por favor, ingresa un correo electrónico';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value!.isEmpty) {
+                                //     return 'Por favor, ingresa un correo electrónico';
+                                //   }
+                                //   return null;
+                                // },
                               ),
                               const SizedBox(height: 30),
                               TextFormField(
@@ -207,16 +220,17 @@ class _CuentaPState extends State<CuentaP> {
                                 ),
                                 style: const TextStyle(fontSize: 20),
                                 obscureText: true,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Por favor, ingresa una contraseña';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value!.isEmpty) {
+                                //     return 'Por favor, ingresa una contraseña';
+                                //   }
+                                //   return null;
+                                // },
                               ),
                               const SizedBox(height: 30),
                               TextFormField(
                                 // controller: emailController,
+                                initialValue: widget.telefono,
                                 cursorColor:
                                     const Color.fromRGBO(11, 117, 133, 1),
                                 decoration: InputDecoration(
@@ -254,12 +268,12 @@ class _CuentaPState extends State<CuentaP> {
                                   prefixIcon: Icon(Icons.phone),
                                 ),
                                 style: const TextStyle(fontSize: 20),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Por favor, ingresa un número de teléfono';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value!.isEmpty) {
+                                //     return 'Por favor, ingresa un número de teléfono';
+                                //   }
+                                //   return null;
+                                // },
                               ),
                             ],
                           ),

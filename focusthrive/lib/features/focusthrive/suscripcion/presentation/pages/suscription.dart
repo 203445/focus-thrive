@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/home2.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PremiumSubscriptionView extends StatelessWidget {
-  const PremiumSubscriptionView({super.key});
+import '../../../../../stripe_service.dart';
+
+class PremiumSubscriptionView extends StatefulWidget {
+  @override
+  _PremiumSubscriptionViewState createState() =>
+      _PremiumSubscriptionViewState();
+}
+
+class _PremiumSubscriptionViewState extends State<PremiumSubscriptionView> {
+  bool isMonthlyPlanSelected = false;
+  bool isThreeMonthsPlanSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +21,7 @@ class PremiumSubscriptionView extends StatelessWidget {
         preferredSize: Size.fromHeight(80),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromRGBO(255, 255, 255, 1),
+            color: Color.fromRGBO(11, 117, 133, 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -27,7 +37,7 @@ class PremiumSubscriptionView extends StatelessWidget {
               icon: const Icon(
                 Icons.navigate_before_rounded,
                 size: 43,
-                color: Color.fromRGBO(20, 148, 164, 1),
+                color: Color.fromRGBO(255, 255, 255, 1),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -39,8 +49,8 @@ class PremiumSubscriptionView extends StatelessWidget {
                 'Work Sans',
                 textStyle: const TextStyle(
                   fontSize: 30,
-                  color: Color.fromRGBO(77, 95, 111, 1),
-                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               textAlign: TextAlign.center,
@@ -71,28 +81,80 @@ class PremiumSubscriptionView extends StatelessWidget {
               SizedBox(height: 32),
               PlanCard(
                 title: 'Plan Mensual',
-                price: '\$9.99/mes',
+                price: '\$70.00/mes',
                 features: [
                   'Acceso ilimitado a contenido premium',
-                  'Descargas sin límites',
                   'Soporte prioritario',
                 ],
+                selected: isMonthlyPlanSelected,
+                onSelect: () {
+                  setState(() {
+                    isMonthlyPlanSelected = true;
+                    isThreeMonthsPlanSelected = false;
+                  });
+                },
               ),
               SizedBox(height: 16),
               PlanCard(
-                title: 'Plan Anual',
-                price: '\$99.99/año',
+                title: 'Plan 3 meses',
+                price: '\$110.00/mes',
                 features: [
                   'Acceso ilimitado a contenido premium',
-                  'Descargas sin límites',
                   'Soporte prioritario',
                   'Ahorra un 20% en comparación con el plan mensual',
                 ],
+                selected: isThreeMonthsPlanSelected,
+                onSelect: () {
+                  setState(() {
+                    isMonthlyPlanSelected = false;
+                    isThreeMonthsPlanSelected = true;
+                  });
+                },
               ),
               SizedBox(height: 32),
               ElevatedButton(
-                onPressed: () {
-                  // Lógica para suscribirse al plan premium
+                onPressed: () async {
+                  var items = [
+                    {
+                      'productPrice': 110,
+                      'productName': 'Subscripción de 3 meses',
+                      'qty': 1
+                    }
+                  ];
+                  var items2 = [
+                    {
+                      'productPrice': 70,
+                      'productName': 'Subscripción de 1 meses',
+                      'qty': 1
+                    }
+                  ];
+                  if (isMonthlyPlanSelected) {
+                    await StripeService.stripePaymentCheckout(
+                        items2, 70, context, mounted, onSuccess: () {
+                      print('SUCCES');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeP()));
+                    }, onCancel: () {
+                      print('CANCEL');
+                    }, onError: (e) {
+                      print('ERROR:' + e.toString());
+                    });
+                  } else {
+                    await StripeService.stripePaymentCheckout(
+                        items, 110, context, mounted, onSuccess: () {
+                      print('SUCCES');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeP()));
+                    }, onCancel: () {
+                      print('CANCEL');
+                    }, onError: (e) {
+                      print('ERROR:' + e.toString());
+                    });
+                  }
                 },
                 child: Text(
                   'Suscribirse',
@@ -112,46 +174,62 @@ class PlanCard extends StatelessWidget {
   final String title;
   final String price;
   final List<String> features;
+  final bool selected;
+  // final Function() onSelect;
+  final VoidCallback onSelect;
 
   const PlanCard({
     super.key,
     required this.title,
     required this.price,
     required this.features,
+    required this.selected,
+    required this.onSelect,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        shape: RoundedRectangleBorder(
+          side: selected
+              ? const BorderSide(color: Colors.blue, width: 2.0)
+              : BorderSide.none,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: InkWell(
+            onTap: onSelect,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    price,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 16),
+                  Column(
+                    children: features
+                        .map((feature) => ListTile(
+                              leading: const Icon(Icons.check),
+                              title: Text(feature),
+                            ))
+                        .toList(),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              price,
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 16),
-            Column(
-              children: features
-                  .map((feature) => ListTile(
-                        leading: Icon(Icons.check),
-                        title: Text(feature),
-                      ))
-                  .toList(),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

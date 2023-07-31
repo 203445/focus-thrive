@@ -11,10 +11,10 @@ class Busqueda extends StatefulWidget {
 
 class _BusquedaState extends State<Busqueda> {
   final List<UserData> userList = [
-    UserData('JANETH ALEJANDRA MORALES MENDOZA', 4.6),
-    UserData('Hola que tallll  2', 3.8),
-    UserData('Usuario 3', 5.0),
-    UserData('Usuario 3', 5.0),
+    UserData('Psic. Antonio Pimentel ', 4.2, 'assets/img/num.jpg'),
+    UserData('Psic. Agustín Melgares', 4.2, 'assets/img/do.jpg'),
+    UserData('Psic. Francisco Javier', 4.5, 'assets/img/ok.jpg'),
+    // UserData('Psic. José Diaz', 4.0, ''),
     // Agrega más datos de usuarios aquí...
   ];
 
@@ -110,6 +110,7 @@ class _BusquedaState extends State<Busqueda> {
 class UserData {
   final String name;
   final double rating;
+  final String photoUrl;
 
-  UserData(this.name, this.rating);
+  UserData(this.name, this.rating, this.photoUrl);
 }

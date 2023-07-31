@@ -39,6 +39,8 @@ abstract class PsicologoRemoteDataSource {
   Future<bool> loginPsicologo(String correo, String password);
   Future<ent.Psicologo?> getPsicologo();
   Future<List<ent.Psicologo?>> getAllPsicologos();
+  Future<ent.Psicologo?> updatePsicologo(
+      String id, String name, String apellido, String telefono, String correo);
 }
 
 class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
@@ -170,10 +172,11 @@ class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
   @override
   Future<List<ent.Psicologo?>> getAllPsicologos() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String? token = sharedPreferences.getString('user_token');
+    String? token = sharedPreferences.getString('user_token_P');
+    print(token);
 
     final response = await dio.get(
-      "http://54.83.165.193/psicologo/get",
+      "http://54.83.165.193/psicologo/get/all",
       options: Options(
         headers: {
           'Authorization': token,
@@ -185,7 +188,6 @@ class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
       dynamic jsonData = response.data;
       List<ent.Psicologo> psicologoList = [];
 
-      // Verifica si la respuesta es un objeto JSON
       if (jsonData is Map<String, dynamic>) {
         ent.Psicologo psicologo = ent.Psicologo(
           id: jsonData['id'].toString(),
@@ -208,5 +210,39 @@ class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
       return psicologoList;
     }
     return [];
+  }
+
+  @override
+  Future<ent.Psicologo?> updatePsicologo(String id, String name,
+      String apellido, String telefono, String correo) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token');
+
+    Map<String, dynamic> data = {
+      "nombre": name,
+      "apellidos": apellido,
+      "telefono": telefono,
+      "id": id,
+      "correo": correo,
+    };
+
+    final response = await dio.get(
+      "http://54.83.165.193/psicologo/get",
+      data: jsonEncode(data),
+      options: Options(
+        headers: {
+          'Authorization': token,
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      // Convierte el JSON del psicologo a un objeto ent.Paciente
+      ent.Psicologo psicologo = ent.Psicologo.fromJson(response.data);
+
+      return psicologo;
+    } else {
+      print('Error: ${response.statusCode}, ${response.statusMessage}');
+    }
+    return null;
   }
 }

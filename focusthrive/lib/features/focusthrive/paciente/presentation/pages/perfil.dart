@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/cuentaP.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/login.dart';
-import 'package:focusthrive/onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../bloc/paciente_bloc.dart';
+import '../provider/getAuth_provider.dart';
+import 'package:provider/provider.dart';
 
 class Perfil extends StatefulWidget {
-  const Perfil({super.key});
+  const Perfil({
+    super.key,
+  });
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -16,7 +16,16 @@ class Perfil extends StatefulWidget {
 
 class _PerfilState extends State<Perfil> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GetAuthProvider>(context, listen: false).getPaciente();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final getPaciente = Provider.of<GetAuthProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -68,8 +77,10 @@ class _PerfilState extends State<Perfil> {
             child: Column(
               children: [
                 CircleAvatar(
-                  radius: 110,
-                  backgroundImage: AssetImage('assets/img/image.jpeg'),
+                  backgroundImage: Image.network(
+                          'http://54.147.89.61${getPaciente.paciente?.urlFoto}')
+                      .image,
+                  radius: 100,
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -87,7 +98,7 @@ class _PerfilState extends State<Perfil> {
                       child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          "Josh Mellark",
+                          "${getPaciente.paciente?.nombre}  ${getPaciente.paciente?.apellidos}",
                           style: GoogleFonts.getFont('Work Sans',
                               textStyle: const TextStyle(
                                   fontSize: 24,
@@ -118,7 +129,13 @@ class _PerfilState extends State<Perfil> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CuentaP()),
+                          MaterialPageRoute(
+                              builder: (context) => CuentaP(
+                                    name: getPaciente.paciente!.nombre,
+                                    apellidos: getPaciente.paciente!.apellidos,
+                                    correo: getPaciente.paciente!.correo,
+                                    telefono: getPaciente.paciente!.telefono,
+                                  )),
                         );
                       },
                       child: Text(
@@ -217,15 +234,15 @@ class _PerfilState extends State<Perfil> {
                         ),
                       ),
                       onPressed: () async {
-                        context.read<PacienteBloc>().add(Logout());
+                        // context.read<PacienteBloc>().add(Logout());
 
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OnboardingScreen()),
-                          );
-                        });
+                        // WidgetsBinding.instance.addPostFrameCallback((_) {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => OnboardingScreen()),
+                        //   );
+                        // });
                       },
                       child: Text(
                         "Cerrar Sesión",

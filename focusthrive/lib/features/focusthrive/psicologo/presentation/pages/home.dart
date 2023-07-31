@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:focusthrive/features/focusthrive/cita/presentation/cita.dart';
+import 'package:focusthrive/features/focusthrive/comentario/presentation/pages/comentario_vista.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/perfil.dart';
 import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/solicitudes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,12 +34,12 @@ class _HomeState extends State<HomePs> {
                   children: [
                     CircleAvatar(
                       radius: 40,
-                      backgroundImage: AssetImage('assets/img/image.jpeg'),
+                      backgroundImage: AssetImage('assets/img/ok.jpg'),
                     ),
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Hola Mario',
+                        'Hola Francisco',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.w300,
@@ -76,7 +79,6 @@ class _HomeState extends State<HomePs> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              print("si funciona");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -106,7 +108,12 @@ class _HomeState extends State<HomePs> {
                           ),
                           SizedBox(height: 10),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CitasListView()));
+                            },
                             child: Container(
                               width: 300,
                               height: 100,
@@ -131,7 +138,13 @@ class _HomeState extends State<HomePs> {
                           ),
                           SizedBox(height: 10),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ComentariosListView()));
+                            },
                             child: Container(
                               width: 300,
                               height: 100,
@@ -196,7 +209,10 @@ class _HomeState extends State<HomePs> {
                                 size: 28,
                               ),
                               onPressed: () {
-                                // Acción al presionar el ícono de búsqueda
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PerfilP()));
                               },
                             ),
                             Text(

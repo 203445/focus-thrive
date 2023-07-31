@@ -7,7 +7,9 @@ class UpdatePsicologoUseCase {
 
   UpdatePsicologoUseCase(this.psicologoRepository);
 
-  Future<Psicologo?> execute() async {
-    return await psicologoRepository.getPsicologo();
+  Future<Psicologo?> execute(String id, String name, String apellido,
+      String telefono, String correo) async {
+    return await psicologoRepository.updatePsicologo(
+        id, name, apellido, telefono, correo);
   }
 }

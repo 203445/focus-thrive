@@ -13,10 +13,10 @@ class _SolicitudesState extends State<Solicitudes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: Size.fromHeight(80),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 255, 254, 254),
+            color: Color.fromRGBO(11, 117, 133, 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -29,7 +29,11 @@ class _SolicitudesState extends State<Solicitudes> {
             centerTitle: true,
             toolbarHeight: 100,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(
+                Icons.navigate_before_rounded,
+                size: 43,
+                color: Color.fromRGBO(255, 255, 255, 1),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -40,8 +44,8 @@ class _SolicitudesState extends State<Solicitudes> {
                 'Work Sans',
                 textStyle: const TextStyle(
                   fontSize: 30,
-                  color: Color.fromRGBO(102, 109, 149, 1),
-                  fontWeight: FontWeight.w300,
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               textAlign: TextAlign.center,
@@ -51,12 +55,6 @@ class _SolicitudesState extends State<Solicitudes> {
           ),
         ),
       ),
-      // AppBar(
-      //   title: Center(child: Text("Solicitudes")),
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      //   toolbarHeight: 100,
-      // ),
       body: Column(
         children: [
           SizedBox(
@@ -75,12 +73,12 @@ class _SolicitudesState extends State<Solicitudes> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/img/image.jpeg'),
+                    backgroundImage: AssetImage('assets/img/num.jpg'),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Arturo',
+                      'Rodrigo',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

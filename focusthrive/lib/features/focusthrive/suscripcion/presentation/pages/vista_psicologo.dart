@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../paciente/presentation/pages/busqueda.dart';
+
 class VistaP extends StatefulWidget {
-  const VistaP({super.key});
+  final UserData userData;
+  const VistaP({super.key, required this.userData});
 
   @override
   State<VistaP> createState() => _VistaPState();
@@ -9,24 +12,37 @@ class VistaP extends StatefulWidget {
 
 class _VistaPState extends State<VistaP> {
   List<Comment> comments = [
-    Comment(author: 'Usuario 1', text: '¡Excelente psicólogo! Lo recomiendo.'),
-    Comment(author: 'Usuario 2', text: 'Muy profesional y amable.'),
-    Comment(author: 'Usuario w', text: 'Muy profesional y amable.'),
-    Comment(author: 'Usuario w', text: 'Muy profesional y amable.'),
-    Comment(author: 'Usuario 1', text: '¡Excelente psicólogo! Lo recomiendo.'),
-    Comment(author: 'Usuario 1', text: '¡Excelente psicólogo! Lo recomiendo.'),
-    Comment(author: 'Usuario 1', text: '¡Excelente psicólogo! Lo recomiendo.'),
-    Comment(author: 'Usuario 1', text: '¡Excelente psicólogo! Lo recomiendo.'),
-    Comment(author: 'Usuario 1', text: '¡Excelente psicólogo! Lo recomiendo.'),
+    Comment(
+        author: 'Mónica Chacón', text: '¡Excelente psicólogo! Lo recomiendo.'),
+    Comment(author: 'Gabriel Mendoza', text: 'Muy profesional y amable.'),
+
     // Agrega más comentarios aquí
   ];
+  // Step 1: Agrega un TextEditingController
+  final TextEditingController _commentController = TextEditingController();
+
+  // Step 2: Función para manejar el envío del comentario
+  void _sendComment() {
+    String commentText = _commentController.text;
+
+    print('Comentario enviado: $commentText');
+    // Limpiamos el TextField después de enviar el comentario.
+    _commentController.clear();
+  }
+
+  @override
+  void dispose() {
+    // Step 1: Liberar el TextEditingController cuando el widget se descarte.
+    _commentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(210, 233, 237, 0.925),
       appBar: AppBar(
-        title: Text('Nombre del Psicólogo'),
+        title: Text(widget.userData.name),
       ),
       body: CustomScrollView(
         slivers: [
@@ -35,14 +51,14 @@ class _VistaPState extends State<VistaP> {
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
-                'assets/img/157.jpg',
+                'assets/img/ok.jpg',
                 fit: BoxFit.contain,
               ),
             ),
           ),
           SliverToBoxAdapter(
             child: Container(
-              color: const Color.fromRGBO(11, 117, 133, 1),
+              color: Color.fromARGB(255, 97, 149, 157),
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +72,7 @@ class _VistaPState extends State<VistaP> {
                   ),
                   Flexible(
                     child: Text(
-                      'Ubicación del Psicólogo bla bla bla bla bla bla bla bl la la bla bla bla bla bla bl bla bla bla bla bla blla bla bla bla bla bla bla bla bla bla bla bla',
+                      'Andador Berlín #207 Col. Potrero Mirador',
                       // Especifica una cantidad máxima de líneas para el texto
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
@@ -84,13 +100,13 @@ class _VistaPState extends State<VistaP> {
                         children: [
                           Icon(Icons.phone),
                           SizedBox(height: 10),
-                          Text(
-                            'Número del Psicólogo',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                          // Text(
+                          //   'Número del Psicólogo',
+                          //   style: TextStyle(fontWeight: FontWeight.bold),
+                          // ),
                           SizedBox(height: 5),
                           Text(
-                            '123456789',
+                            '961 1205691',
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
@@ -106,13 +122,9 @@ class _VistaPState extends State<VistaP> {
                         children: [
                           Icon(Icons.mail),
                           SizedBox(height: 10),
-                          Text(
-                            'Correo del Psicólogo',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
                           SizedBox(height: 5),
                           Text(
-                            'correo@psicologo.com',
+                            'javier@gmail.com',
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
@@ -125,14 +137,14 @@ class _VistaPState extends State<VistaP> {
           ),
           SliverToBoxAdapter(
             child: Card(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Descripción del Psicólogo',
+                      'Descripción',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -140,8 +152,8 @@ class _VistaPState extends State<VistaP> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'Aquí va la descripción del psicólogo...',
-                      style: TextStyle(fontSize: 14),
+                      ' Con más de 10 años de experiencia en el campo de la psicología clínica. Tanatólogo',
+                      style: TextStyle(fontSize: 15),
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -167,6 +179,23 @@ class _VistaPState extends State<VistaP> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  // Step 3: Agrega el TextFormField y el botón "Enviar"
+                  TextFormField(
+                    controller: _commentController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Escribe tu comentario aquí',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _sendComment,
+                    child: Text('Enviar'),
                   ),
                   // Lista de comentarios
                   ListView.builder(

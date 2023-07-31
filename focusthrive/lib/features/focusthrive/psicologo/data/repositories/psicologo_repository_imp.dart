@@ -49,4 +49,11 @@ class PsicologoRepositoryImp extends PsicologoRepository {
   Future<List<Psicologo?>> getAllPsicologos() async {
     return await psicologoRemoteDataSource.getAllPsicologos();
   }
+
+  @override
+  Future<Psicologo?> updatePsicologo(String id, String name, String apellido,
+      String telefono, String correo) async {
+    return await psicologoRemoteDataSource.updatePsicologo(
+        id, name, apellido, telefono, correo);
+  }
 }

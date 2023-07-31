@@ -55,6 +55,12 @@ class Presslogin extends PacienteEvent {
   });
 }
 
+class PressTarea extends PacienteEvent {
+  final String id;
 
+  PressTarea({
+    required this.id,
+  });
+}
 
 class Logout extends PacienteEvent {}

@@ -19,7 +19,7 @@ class _AyudaPState extends State<AyudaP> {
         preferredSize: Size.fromHeight(80),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromRGBO(255, 255, 255, 1),
+            color: Color.fromRGBO(11, 117, 133, 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -35,7 +35,7 @@ class _AyudaPState extends State<AyudaP> {
               icon: const Icon(
                 Icons.navigate_before_rounded,
                 size: 43,
-                color: Color.fromRGBO(20, 148, 164, 1),
+                color: Color.fromRGBO(255, 255, 255, 1),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -47,8 +47,8 @@ class _AyudaPState extends State<AyudaP> {
                 'Work Sans',
                 textStyle: const TextStyle(
                   fontSize: 30,
-                  color: Color.fromRGBO(77, 95, 111, 1),
-                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               textAlign: TextAlign.center,
@@ -109,10 +109,10 @@ class _AyudaPState extends State<AyudaP> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CuentaP()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => CuentaP()),
+                    // );
                   },
                   child: Text(
                     "Cuenta",

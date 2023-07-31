@@ -1,16 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/login.dart';
-import 'package:focusthrive/main.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/provider/createPaciente_provider.dart';
+import 'package:focusthrive/stripe_service.dart';
+import 'package:provider/provider.dart';
 
-import 'features/focusthrive/paciente/presentation/bloc/paciente_bloc.dart';
+import 'features/focusthrive/paciente/presentation/pages/home2.dart';
 import 'features/focusthrive/paciente/presentation/widgets/buton.dart';
-import 'features/focusthrive/paciente/presentation/widgets/error_views.dart';
-
-import '../../../../usecase_config.dart';
 
 class Registro extends StatefulWidget {
   const Registro({super.key});
@@ -20,14 +18,16 @@ class Registro extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<Registro> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _correoController = TextEditingController();
-
+  final emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+  final passwordRegex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$';
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final TextEditingController _cardNumberController = TextEditingController();
+  // final TextEditingController _cardNumberController = TextEditingController();
   File? _file;
   late bool _passwordVisible = false;
 
@@ -175,6 +175,14 @@ class _MyWidgetState extends State<Registro> {
                             color: Color.fromRGBO(20, 148, 164, 1)),
                       ),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Por favor, ingresa un correo electrónico';
+                      } else if (!RegExp(emailRegex).hasMatch(value)) {
+                        return 'Ingresa un correo electrónico válido';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Padding(
@@ -223,6 +231,14 @@ class _MyWidgetState extends State<Registro> {
                       ),
                     ),
                     obscureText: !_passwordVisible,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Por favor, ingresa una contraseña';
+                      } else if (!RegExp(passwordRegex).hasMatch(value)) {
+                        return 'La contraseña debe tener al menos 8 caracteres, una letra y un número';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Padding(
@@ -281,25 +297,13 @@ class _MyWidgetState extends State<Registro> {
                       _passwordController.text == '' ||
                       _correoController.text == '' ||
                       _correoController.text == '') {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Completa los campos'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('Cerrar'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      showDialogWithMessage(
+                          context, 'Error', 'Completa los campos');
+                    });
                   } else {
                     if (_passwordController.text ==
                         _confirmPasswordController.text) {
-                      // Redirigir a la siguiente vista según la selección del usuario
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -313,19 +317,10 @@ class _MyWidgetState extends State<Registro> {
                         ),
                       );
                     } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('Error'),
-                            content: Text('Las contraseñas no coinciden.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('Cerrar'),
-                              ),
-                            ],
-                          );
+                      SchedulerBinding.instance.addPostFrameCallback(
+                        (_) {
+                          showDialogWithMessage(
+                              context, 'Error', 'Las contraseñas no coinciden');
                         },
                       );
                     }
@@ -347,9 +342,9 @@ class UserTypeScreen extends StatelessWidget {
   final String password;
   final File? file;
 
-  final TextEditingController _cardNumberController = TextEditingController();
+  // final TextEditingController _cardNumberController = TextEditingController();
 
-  UserTypeScreen(
+  const UserTypeScreen(
       {super.key,
       required this.name,
       required this.lastName,
@@ -359,146 +354,90 @@ class UserTypeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final crearP = Provider.of<CreatePacienteProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tipo de Usuario'),
-      ),
-      body: BlocBuilder<PacienteBloc, PacienteState>(
-        builder: (context, state) {
-          if (state is Loading) {
-            return const Center(
-                child: CircularProgressIndicator(
-                    color: Color.fromRGBO(11, 117, 133, 1)));
-          } else if (state is LoadedPage) {
-            return Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text('Selecciona tu tipo de usuario:'),
-                  SizedBox(height: 16.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // bool resultado = await usecaseConfig.createProfileUseCase!
-                      //     .execute(name, lastName, file, email, '', password,
-                      //         '', '');
-
-                      // print(resultado);
-                      context.read<PacienteBloc>().add(CreatePaciente(
-                          nombre: name,
-                          apellido: lastName,
-                          urlfoto: file,
-                          correo: email,
-                          telefono: '',
-                          password: password,
-                          plan: "ninguno",
-                          tarjeta: ""));
-
-                    },
-                    child: Text('Paciente'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Redirigir a la vista para psicólogos
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PsychologistScreen(
-                            cardNumberController: _cardNumberController,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text('Psicólogo'),
-                  ),
-                ],
-              ),
-            );
-          } else if (state is PacienteCreado) {
-            return Center(
-              child: FutureBuilder(
-                future: Future.delayed(Duration.zero, () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPaciente()));
-                }),
-                builder: (BuildContext context, snapshot) {
-                  return Container();
-                },
-              ),
-            );
-          } else if (state is Error) {
-            return const ErrorView();
-          } else {
-            return Container();
-          }
-        },
-      ),
-    );
-  }
-}
-
-class PatientScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Registro de Paciente'),
+        title: const Text('Tipo de Usuario'),
       ),
       body: Center(
-        child: Text('Formulario de Registro de Paciente'),
-      ),
-    );
-  }
-}
-
-class PsychologistScreen extends StatelessWidget {
-  final TextEditingController cardNumberController;
-
-  PsychologistScreen({required this.cardNumberController});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Registro de Psicólogo'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextFormField(
-              controller: cardNumberController,
-              decoration: InputDecoration(labelText: 'Número de Tarjeta'),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // Realizar el registro del psicólogo
-                // ...
-
-                // Mostrar mensaje de éxito
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Registro Exitoso'),
-                      content: Text('El psicólogo ha sido registrado.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Cerrar'),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('Selecciona tu tipo de usuario:'),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () async {
+                  await crearP.createProfile(
+                      name, lastName, file, email, "", password, "ninguno", "");
+                  if (crearP.response == false) {
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      showDialogWithMessage(context, 'Error al registrarse',
+                          'Es posible que ya exista este correo. Por favor, inténtalo de nuevo.');
+                    });
+                  } else {
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      showDialogWithMessage(
+                          context, 'Success', 'Registro correcto');
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPaciente(),
                         ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text('Registrar'),
-            ),
-          ],
+                      );
+                    });
+                  }
+                },
+                child: const Text('Paciente'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var items = [
+                    {
+                      'productPrice': 110,
+                      'productName': 'Subscripción de cada mes',
+                      'qty': 1
+                    }
+                  ];
+
+                  await StripeService.stripePaymentCheckout(
+                      items, 100, context, 1, onSuccess: () {
+                    print('SUCCES');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const HomeP()));
+                  }, onCancel: () {
+                    print('CANCEL');
+                  }, onError: (e) {
+                    print('ERROR:' + e.toString());
+                  });
+                },
+                child: Text('Psicólogo'),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+void showDialogWithMessage(BuildContext context, String title, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
 }
