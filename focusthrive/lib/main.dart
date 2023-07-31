@@ -17,6 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'features/focusthrive/paciente/presentation/notification/notification_api.dart';
+import 'features/focusthrive/psicologo/presentation/providers/authPsicologo_provider.dart';
 import 'features/focusthrive/psicologo/presentation/providers/createPsicologo_provider.dart';
 // import 'features/focusthrive/paciente/presentation/pages/encuesta.dart';
 // import 'features/focusthrive/paciente/presentation/pages/home2.dart';
@@ -70,7 +71,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (_) => CreatePsicologoProvider(
                 createProfilePsicologoUseCase:
-                    usecaseConfig.createProfilePsicologoUseCase!))
+                    usecaseConfig.createProfilePsicologoUseCase!)),
+        ChangeNotifierProvider(
+            create: (_) => AuthPsicologoProvider(
+                loginPsicologoUseCase: usecaseConfig.loginPsicologoUseCase!))
       ],
       child: MaterialApp(
         builder: FToastBuilder(),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/provider/auth_provider.dart';
 import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/home.dart';
 import 'package:focusthrive/register.dart';
 import 'package:provider/provider.dart';
 
 import '../../../paciente/presentation/widgets/buton.dart';
+import '../providers/authPsicologo_provider.dart';
 
 class LoginPsicologo extends StatefulWidget {
   const LoginPsicologo({super.key});
@@ -24,7 +24,7 @@ class _LoginPacienteState extends State<LoginPsicologo> {
 
   @override
   Widget build(BuildContext context) {
-    final loginpaciente = Provider.of<AuthProvider>(context);
+    final loginpsicologo = Provider.of<AuthPsicologoProvider>(context);
 
     return Scaffold(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
@@ -75,14 +75,13 @@ class _LoginPacienteState extends State<LoginPsicologo> {
                               color: Color.fromRGBO(77, 95, 111, 35),
                             ),
                           ),
-                           const Text(
+                          const Text(
                             "Psicólogos",
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w400,
                               color: Color.fromRGBO(77, 95, 111, 35),
                             ),
-                            
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 50, top: 30),
@@ -265,13 +264,13 @@ class _LoginPacienteState extends State<LoginPsicologo> {
                           ),
                         ],
                       )),
-                  customButton(loginpaciente.loading ? 'Cargando' : 'Entrar',
+                  customButton(loginpsicologo.loading ? 'Cargando' : 'Entrar',
                       () async {
                     if (_formKey.currentState!.validate()) {
-                      await loginpaciente.login(
+                      await loginpsicologo.login(
                           emailController.text, passwordController.text);
 
-                      if (loginpaciente.confirm == true) {
+                      if (loginpsicologo.confirm == true) {
                         emailController.clear();
                         passwordController.clear();
                         SchedulerBinding.instance.addPostFrameCallback((_) {
