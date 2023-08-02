@@ -39,8 +39,6 @@ class _VistaPState extends State<VistaP> {
 
   @override
   Widget build(BuildContext context) {
-    final _url =
-        'https://api.whatsapp.com/send?phone=${widget.userData.telefono}';
     final createComentario = Provider.of<CreateComentarioProvider>(context);
     final listComentario = Provider.of<GetComentarioProvider>(context);
     return Scaffold(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/cuentaP.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AyudaP extends StatefulWidget {
   const AyudaP({super.key});
@@ -174,7 +175,15 @@ class _AyudaPState extends State<AyudaP> {
                           17), // Bordes redondos con radio de 17
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    var pages = Uri.parse(
+                        "https://desarrollotecnologicodelsuereste.blogspot.com/p/terminos-y-condiciones-de-politicas-y.html");
+                    try {
+                      launchUrl(pages);
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
+                  },
                   child: Text(
                     "Politicas y Privacidad",
                     style: GoogleFonts.getFont(
@@ -206,7 +215,15 @@ class _AyudaPState extends State<AyudaP> {
                       width: 1.0,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    var pages = Uri.parse(
+                        "https://desarrollotecnologicodelsuereste.blogspot.com/p/terminos-y-condiciones-de-politicas-y.html");
+                    try {
+                      launchUrl(pages);
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
+                  },
                   child: Text(
                     "Seguridad",
                     style: GoogleFonts.getFont(
