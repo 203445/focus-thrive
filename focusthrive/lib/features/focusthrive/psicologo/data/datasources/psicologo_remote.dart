@@ -39,8 +39,25 @@ abstract class PsicologoRemoteDataSource {
   Future<bool> loginPsicologo(String correo, String password);
   Future<ent.Psicologo?> getPsicologo();
   Future<List<ent.Psicologo?>> getAllPsicologos();
-  Future<ent.Psicologo?> updatePsicologo(
-      String id, String name, String apellido, String telefono, String correo);
+  Future<bool> updatePsicologo(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      File? urlfoto);
+  Future<bool> updatePsicologoProfile(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      String img);
+  Future<bool> delete(String id);
 }
 
 class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
@@ -149,6 +166,7 @@ class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
   Future<ent.Psicologo?> getPsicologo() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = sharedPreferences.getString('user_token');
+    print(token);
     final response = await dio.get(
       "http://54.83.165.193/psicologo/get",
       options: Options(
@@ -159,7 +177,7 @@ class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      // Convierte el JSON del psicologo a un objeto ent.Paciente
+      print(response.data);
       ent.Psicologo psicologo = ent.Psicologo.fromJson(response.data);
 
       return psicologo;
@@ -185,64 +203,148 @@ class PsicologoRemoteDataSourceImp implements PsicologoRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      dynamic jsonData = response.data;
-      List<ent.Psicologo> psicologoList = [];
+      print('Datos recibidos: ${response.data}');
+      List<dynamic> jsonList = response.data;
 
-      if (jsonData is Map<String, dynamic>) {
-        ent.Psicologo psicologo = ent.Psicologo(
-          id: jsonData['id'].toString(),
-          nombre: jsonData['nombre'].toString(),
-          apellidos: jsonData['apellidos'].toString(),
-          correo: jsonData['correo'].toString(),
-          contrasena: jsonData['passw'].toString(),
-          numerotarjeta: jsonData['ntarjeta'].toString(),
-          telefono: jsonData['telefono'].toString(),
-          urlFoto: jsonData['image'].toString(),
-          rating: jsonData['raiting'],
-          description: jsonData['descripcion'].toString(),
-          ubicacion: jsonData['ubicacion'].toString(),
-        );
-        psicologoList.add(psicologo);
-      } else {
-        print('Uno de los elementos no es un JSON válido.');
-      }
+      List<ent.Psicologo> consejoList =
+          jsonList.map((jsonMap) => ent.Psicologo.fromJson(jsonMap)).toList();
 
-      return psicologoList;
+      return consejoList;
+    } else {
+      print('Error: ${response.statusCode}, ${response.statusMessage}');
+
+      return [];
     }
-    return [];
   }
 
   @override
-  Future<ent.Psicologo?> updatePsicologo(String id, String name,
-      String apellido, String telefono, String correo) async {
+  Future<bool> updatePsicologo(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      File? urlfoto) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = sharedPreferences.getString('user_token');
 
-    Map<String, dynamic> data = {
-      "nombre": name,
-      "apellidos": apellido,
-      "telefono": telefono,
-      "id": id,
-      "correo": correo,
-    };
+    FormData formData;
 
-    final response = await dio.get(
-      "http://54.83.165.193/psicologo/get",
-      data: jsonEncode(data),
+    if (urlfoto != null) {
+      formData = FormData.fromMap({
+        "nombre": name,
+        "apellidos": apellido,
+        "telefono": telefono,
+        "id": id,
+        "descripcion": descripcion,
+        "ubicacion": ubicacion,
+        "correo": correo,
+        "image": await MultipartFile.fromFile(urlfoto.path,
+            filename: urlfoto.path.split('/').last),
+      });
+    } else {
+      final File defaultImage = await getImageFileFromAssets();
+      formData = FormData.fromMap({
+        "nombre": name,
+        "apellidos": apellido,
+        "telefono": telefono,
+        "id": id,
+        "descripcion": descripcion,
+        "ubicacion": ubicacion,
+        "correo": correo,
+        "image": await MultipartFile.fromFile(defaultImage.path,
+            filename: defaultImage.path.split('/').last),
+      });
+    }
+    final response = await dio.post(
+      "http://54.83.165.193/psicologo/update",
+      data: formData,
       options: Options(
         headers: {
           'Authorization': token,
         },
       ),
     );
-    if (response.statusCode == 200) {
-      // Convierte el JSON del psicologo a un objeto ent.Paciente
-      ent.Psicologo psicologo = ent.Psicologo.fromJson(response.data);
 
-      return psicologo;
+    if (response.data == true) {
+      return true;
     } else {
-      print('Error: ${response.statusCode}, ${response.statusMessage}');
+      return false;
     }
-    return null;
+  }
+
+  @override
+  Future<bool> updatePsicologoProfile(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      String img) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token');
+
+    FormData formData;
+
+    formData = FormData.fromMap({
+      "nombre": name,
+      "apellidos": apellido,
+      "telefono": telefono,
+      "id": id,
+      "descripcion": descripcion,
+      "ubicacion": ubicacion,
+      "correo": correo,
+      "image": img
+    });
+
+    final response = await dio.post(
+      "http://54.83.165.193/psicologo/update",
+      data: formData,
+      options: Options(
+        headers: {
+          'Authorization': token,
+        },
+      ),
+    );
+
+    if (response.data == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> delete(String id) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token');
+
+    Map<String, dynamic> data = {
+      "id": id,
+    };
+
+    try {
+      final response = await dio.post(
+        "http://54.83.165.193/psicologo/delete",
+        data: jsonEncode(data),
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data == true) return true;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return false;
+    }
+    return false;
   }
 }

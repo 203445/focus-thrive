@@ -1,14 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:focusthrive/features/focusthrive/paciente/domain/entities/paciente.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/ayuda.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/configuracion_view.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/cuentaP.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../../../cita/presentation/pages/citaPaciente.dart';
 import '../provider/getAuth_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/updatePaciente_provider.dart';
+
 class Perfil extends StatefulWidget {
-  const Perfil({
-    super.key,
-  });
+  const Perfil({super.key});
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -23,9 +30,23 @@ class _PerfilState extends State<Perfil> {
     });
   }
 
+  File? _profileimage;
+
+  Future getImage() async {
+    final img = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (img == null) {
+      return;
+    }
+    setState(() {
+      _profileimage = File(img.path);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final getPaciente = Provider.of<GetAuthProvider>(context);
+    final update = Provider.of<UpdatePacienteProvider>(context);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -76,12 +97,53 @@ class _PerfilState extends State<Perfil> {
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
             child: Column(
               children: [
-                CircleAvatar(
-                  backgroundImage: Image.network(
-                          'http://54.147.89.61${getPaciente.paciente?.urlFoto}')
-                      .image,
-                  radius: 100,
-                ),
+                Stack(children: [
+                  CircleAvatar(
+                    backgroundImage: _profileimage != null
+                        ? Image.file(_profileimage!).image
+                        : Image.network(
+                                'http://54.147.89.61${getPaciente.paciente?.urlFoto}')
+                            .image,
+                    radius: 100,
+                  ),
+                  if (_profileimage != null)
+                    Positioned(
+                        right: -1,
+                        bottom: -1,
+                        child: FloatingActionButton.small(
+                          onPressed: () async {
+                            await update.updatePaciente(
+                                getPaciente.paciente!.id,
+                                getPaciente.paciente!.nombre,
+                                getPaciente.paciente!.apellidos,
+                                getPaciente.paciente!.correo,
+                                getPaciente.paciente!.telefono,
+                                _profileimage);
+
+                            if (update.response == true) {
+                              await getPaciente.getPaciente();
+                            } else {
+                              print('Ocurrió un problema');
+                            }
+                          },
+                          backgroundColor: Colors.white,
+                          child: const Icon(Icons.save,
+                              color: Color.fromRGBO(11, 117, 133, 1)),
+                        )),
+                  if (_profileimage == null)
+                    Positioned(
+                        right: -1,
+                        bottom: -1,
+                        child: FloatingActionButton.small(
+                          onPressed: () {
+                            getImage();
+                          },
+                          backgroundColor: Colors.white,
+                          //
+                          child: const Icon(Icons.edit,
+                              color: Color.fromRGBO(11, 117, 133, 1)),
+                        )),
+                ]),
                 Padding(
                   padding: EdgeInsets.only(
                     bottom: 10,
@@ -131,10 +193,7 @@ class _PerfilState extends State<Perfil> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => CuentaP(
-                                    name: getPaciente.paciente!.nombre,
-                                    apellidos: getPaciente.paciente!.apellidos,
-                                    correo: getPaciente.paciente!.correo,
-                                    telefono: getPaciente.paciente!.telefono,
+                                    paciente: getPaciente.paciente!,
                                   )),
                         );
                       },
@@ -153,38 +212,86 @@ class _PerfilState extends State<Perfil> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 245,
-                    height: 70,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        side: BorderSide(
-                          color: const Color.fromRGBO(20, 148, 164, 1),
-                          width: 1.0,
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        "Configuración",
-                        style: GoogleFonts.getFont(
-                          'Work Sans',
-                          textStyle: const TextStyle(
-                            fontSize: 25,
-                            color: Color.fromRGBO(77, 95, 111, 1),
-                            fontWeight: FontWeight.w400,
+                if (getPaciente.paciente!.esPremium)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 245,
+                      height: 70,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          side: BorderSide(
+                            color: const Color.fromRGBO(20, 148, 164, 1),
+                            width: 1.0,
                           ),
                         ),
-                        textAlign: TextAlign.center,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CitasPacienteListView(
+                                    idPaciente: getPaciente.paciente!.id)),
+                          );
+                        },
+                        child: Text(
+                          "Citas",
+                          style: GoogleFonts.getFont(
+                            'Work Sans',
+                            textStyle: const TextStyle(
+                              fontSize: 25,
+                              color: Color.fromRGBO(77, 95, 111, 1),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                if (getPaciente.paciente!.esPremium == false)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 245,
+                      height: 70,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          side: BorderSide(
+                            color: const Color.fromRGBO(20, 148, 164, 1),
+                            width: 1.0,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DeletePacientetView(
+                                    id: getPaciente.paciente!.id)),
+                          );
+                        },
+                        child: Text(
+                          "Configuración",
+                          style: GoogleFonts.getFont(
+                            'Work Sans',
+                            textStyle: const TextStyle(
+                              fontSize: 25,
+                              color: Color.fromRGBO(77, 95, 111, 1),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
@@ -201,7 +308,13 @@ class _PerfilState extends State<Perfil> {
                           width: 1.0,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AyudaP()),
+                        );
+                      },
                       child: Text(
                         "Ayuda",
                         style: GoogleFonts.getFont(
@@ -264,6 +377,7 @@ class _PerfilState extends State<Perfil> {
           ),
         ),
       ),
+      // }),
     );
   }
 }

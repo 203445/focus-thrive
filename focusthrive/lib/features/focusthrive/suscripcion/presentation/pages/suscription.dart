@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/home2.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../stripe_service.dart';
@@ -132,10 +132,9 @@ class _PremiumSubscriptionViewState extends State<PremiumSubscriptionView> {
                     await StripeService.stripePaymentCheckout(
                         items2, 70, context, mounted, onSuccess: () {
                       print('SUCCES');
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeP()));
+                      Navigator.pop(
+                        context,
+                      );
                     }, onCancel: () {
                       print('CANCEL');
                     }, onError: (e) {
@@ -145,10 +144,9 @@ class _PremiumSubscriptionViewState extends State<PremiumSubscriptionView> {
                     await StripeService.stripePaymentCheckout(
                         items, 110, context, mounted, onSuccess: () {
                       print('SUCCES');
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeP()));
+                      Navigator.pop(
+                        context,
+                      );
                     }, onCancel: () {
                       print('CANCEL');
                     }, onError: (e) {

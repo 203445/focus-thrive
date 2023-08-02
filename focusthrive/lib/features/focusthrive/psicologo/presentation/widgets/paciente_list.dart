@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/busqueda.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/domain/entities/psicologo.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../suscripcion/presentation/pages/vista_psicologo.dart';
 
 class PsicologoList extends StatefulWidget {
-  final UserData userData;
-  const PsicologoList({super.key, required this.userData});
+  final Psicologo userData;
+  final String idPaciente;
+  const PsicologoList(
+      {super.key, required this.userData, required this.idPaciente});
 
   @override
   State<PsicologoList> createState() => _PsicologoListState();
@@ -27,11 +29,13 @@ class _PsicologoListState extends State<PsicologoList> {
         ),
         child: GestureDetector(
           onTap: () {
-            // Navigate to another view here (e.g., UserDetailsPage)
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => VistaP(userData: widget.userData),
+                builder: (context) => VistaP(
+                  userData: widget.userData,
+                  idPaciente: widget.idPaciente,
+                ),
               ),
             );
           },
@@ -39,14 +43,14 @@ class _PsicologoListState extends State<PsicologoList> {
             leading: CircleAvatar(
               radius: 30,
               backgroundImage: NetworkImage(
-                  widget.userData.photoUrl[0]), // Profile photo URL
-              child: Text(widget.userData.name[0]), // Initial letter fallback
+                  'http://54.83.165.193${widget.userData.urlFoto}'), // Profile photo URL
+              // child: Text(widget.userData.nombre[0]), // Initial letter fallback
             ),
             title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.userData.name,
+                  widget.userData.nombre,
                   style: GoogleFonts.getFont(
                     'Work Sans',
                     textStyle: const TextStyle(
@@ -66,7 +70,7 @@ class _PsicologoListState extends State<PsicologoList> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     RatingBar.builder(
-                      initialRating: widget.userData.rating,
+                      initialRating: widget.userData.rating.toDouble(),
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: true,

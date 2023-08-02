@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:focusthrive/features/focusthrive/comentario/domain/entities/comentario.dart';
 
-import '../../../paciente/presentation/pages/busqueda.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/domain/entities/psicologo.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../comentario/presentation/pages/providers/create_comentario_provider.dart';
+import '../../../comentario/presentation/pages/providers/get_comentario_provider.dart';
+import '../../../paciente/presentation/notification/notification_api.dart';
 
 class VistaP extends StatefulWidget {
-  final UserData userData;
-  const VistaP({super.key, required this.userData});
+  final Psicologo userData;
+  final String idPaciente;
+  const VistaP({super.key, required this.userData, required this.idPaciente});
 
   @override
   State<VistaP> createState() => _VistaPState();
 }
 
 class _VistaPState extends State<VistaP> {
-  List<Comment> comments = [
-    Comment(
-        author: 'Mónica Chacón', text: '¡Excelente psicólogo! Lo recomiendo.'),
-    Comment(author: 'Gabriel Mendoza', text: 'Muy profesional y amable.'),
-
-    // Agrega más comentarios aquí
-  ];
-  // Step 1: Agrega un TextEditingController
   final TextEditingController _commentController = TextEditingController();
-
-  // Step 2: Función para manejar el envío del comentario
-  void _sendComment() {
-    String commentText = _commentController.text;
-
-    print('Comentario enviado: $commentText');
-    // Limpiamos el TextField después de enviar el comentario.
-    _commentController.clear();
+  @override
+  void initState() {
+    super.initState();
+    print(widget.userData.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GetComentarioProvider>(context, listen: false)
+          .listComentario(widget.userData.id);
+    });
   }
 
   @override
@@ -39,10 +39,14 @@ class _VistaPState extends State<VistaP> {
 
   @override
   Widget build(BuildContext context) {
+    final _url =
+        'https://api.whatsapp.com/send?phone=${widget.userData.telefono}';
+    final createComentario = Provider.of<CreateComentarioProvider>(context);
+    final listComentario = Provider.of<GetComentarioProvider>(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(210, 233, 237, 0.925),
       appBar: AppBar(
-        title: Text(widget.userData.name),
+        title: Text(widget.userData.nombre),
       ),
       body: CustomScrollView(
         slivers: [
@@ -50,8 +54,8 @@ class _VistaPState extends State<VistaP> {
             backgroundColor: Colors.white,
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/img/ok.jpg',
+              background: Image.network(
+                'http://54.83.165.193${widget.userData.urlFoto}',
                 fit: BoxFit.contain,
               ),
             ),
@@ -72,7 +76,7 @@ class _VistaPState extends State<VistaP> {
                   ),
                   Flexible(
                     child: Text(
-                      'Andador Berlín #207 Col. Potrero Mirador',
+                      widget.userData.ubicacion,
                       // Especifica una cantidad máxima de líneas para el texto
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
@@ -100,13 +104,9 @@ class _VistaPState extends State<VistaP> {
                         children: [
                           Icon(Icons.phone),
                           SizedBox(height: 10),
-                          // Text(
-                          //   'Número del Psicólogo',
-                          //   style: TextStyle(fontWeight: FontWeight.bold),
-                          // ),
                           SizedBox(height: 5),
                           Text(
-                            '961 1205691',
+                            widget.userData.telefono,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
@@ -124,7 +124,7 @@ class _VistaPState extends State<VistaP> {
                           SizedBox(height: 10),
                           SizedBox(height: 5),
                           Text(
-                            'javier@gmail.com',
+                            widget.userData.correo,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
@@ -152,13 +152,22 @@ class _VistaPState extends State<VistaP> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      ' Con más de 10 años de experiencia en el campo de la psicología clínica. Tanatólogo',
+                      widget.userData.description,
                       style: TextStyle(fontSize: 15),
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        // Acción para contactar al psicólogo
+                      onPressed: () async {
+                        // if (await canLaunch(_url))
+                        // await launch(_url, forceSafariVC: false);
+                        var whatsappUrl = Uri.parse(
+                            "whatsapp://send?phone=+52${widget.userData.telefono}" +
+                                "&text=${Uri.encodeComponent("Buenas tardes")}");
+                        try {
+                          launchUrl(whatsappUrl);
+                        } catch (e) {
+                          debugPrint(e.toString());
+                        }
                       },
                       child: Text('Contactar'),
                     ),
@@ -194,16 +203,38 @@ class _VistaPState extends State<VistaP> {
                   ),
                   SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: _sendComment,
+                    onPressed: () async {
+                      String commentText = _commentController.text;
+                      await createComentario.createComentario(
+                          widget.idPaciente, widget.userData.id, commentText);
+                      print('Comentario enviado: $commentText');
+                      await showNotification(
+                          title: widget.userData.nombre,
+                          body: 'Gracias por tu comentario');
+
+                      await listComentario.listComentario(widget.userData.id);
+                      _commentController.clear();
+                    },
                     child: Text('Enviar'),
                   ),
                   // Lista de comentarios
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: comments.length,
+                    itemCount: listComentario.comentario?.length ?? 0,
                     itemBuilder: (context, index) {
-                      return CommentCard(comment: comments[index]);
+                      if (listComentario.comentario == [] ||
+                          listComentario.comentario?.length == 0) {
+                        // Mostrar un mensaje o widget alternativo si no hay comentarios.
+                        return Center(
+                          child: Text('No hay comentarios disponibles.'),
+                        );
+                      } else {
+                        // Mostrar los comentarios utilizando CommentCard.
+                        return CommentCard(
+                          comment: listComentario.comentario![index],
+                        );
+                      }
                     },
                   ),
                 ],
@@ -216,38 +247,8 @@ class _VistaPState extends State<VistaP> {
   }
 }
 
-class SideBox extends StatelessWidget {
-  final String title;
-  final String content;
-
-  SideBox({required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      padding: EdgeInsets.all(10),
-      color: Colors.white,
-      child: Column(
-        children: [
-          Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text(content),
-        ],
-      ),
-    );
-  }
-}
-
-class Comment {
-  String author;
-  String text;
-
-  Comment({required this.author, required this.text});
-}
-
 class CommentCard extends StatelessWidget {
-  final Comment comment;
+  final Comentario comment;
 
   CommentCard({required this.comment});
 
@@ -261,11 +262,11 @@ class CommentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Autor: ${comment.author}',
+              'Autor: Un usuario ',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 5),
-            Text(comment.text),
+            Text(comment.description),
           ],
         ),
       ),

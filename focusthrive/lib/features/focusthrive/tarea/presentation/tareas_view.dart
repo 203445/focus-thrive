@@ -31,7 +31,7 @@ class _TareasState extends State<TareaView> {
   @override
   Widget build(BuildContext context) {
     final tareas = Provider.of<GetTareaProvider>(context);
-    if (tareas.tarea!.length == 0) {
+    if (tareas.tarea?.length == 0 || tareas.tarea == null) {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80),
@@ -128,12 +128,8 @@ class _TareasState extends State<TareaView> {
               ),
             ),
           ),
-          body:
-              // tareas.tarea  != null
-              // ?
-              ListView.separated(
-            itemCount: (tareas.tarea?.length ?? 0) +
-                (tareas.tareasCompletadas?.length ?? 0),
+          body: ListView.separated(
+            itemCount: tareas.tarea!.length,
             separatorBuilder: (context, index) => SizedBox(height: 10),
             itemBuilder: (context, index) {
               if (tareas.tarea != null && index < tareas.tarea!.length) {
@@ -142,20 +138,9 @@ class _TareasState extends State<TareaView> {
                   tarea: tareas.tarea![index],
                   id: widget.id,
                 );
-              } else if (tareas.tareasCompletadas != null) {
-                // Mostrar tarea completada
-                int completadasIndex = index - (tareas.tarea?.length ?? 0);
-                return TodoItemTile(
-                  tarea: tareas.tareasCompletadas![completadasIndex],
-                  id: widget.id,
-                );
               }
             },
-          )
-          // : const Center(
-          //     child: CircularProgressIndicator(),
-          //   ),
-          );
+          ));
     }
   }
 }

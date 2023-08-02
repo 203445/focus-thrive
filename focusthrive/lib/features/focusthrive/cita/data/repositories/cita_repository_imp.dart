@@ -30,4 +30,12 @@ class CitaRepositoryImp extends CitaRepository {
   Future<bool> deleteCita(String id) async {
     return await citaRemoteDataSource.deleteCita(id);
   }
+
+  @override
+  Future<List<Cita?>> getCitaPaciente(String id) async {
+    return await citaRemoteDataSource.getCitaPaciente(id);
+  }
+  Future<bool> updateCita(String id, String status) async {
+    return await citaRemoteDataSource.updateCita(id, status);
+  }
 }

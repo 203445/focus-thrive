@@ -7,4 +7,5 @@ abstract class SolicitudRepository {
     String motivo,
     String idPaciente,
   );
+  Future<List<SolicitudesC?>> listSolicitud();
 }

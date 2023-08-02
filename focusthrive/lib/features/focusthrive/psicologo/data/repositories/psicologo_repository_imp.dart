@@ -51,9 +51,35 @@ class PsicologoRepositoryImp extends PsicologoRepository {
   }
 
   @override
-  Future<Psicologo?> updatePsicologo(String id, String name, String apellido,
-      String telefono, String correo) async {
+  Future<bool> updatePsicologo(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      File? urlfoto) async {
     return await psicologoRemoteDataSource.updatePsicologo(
-        id, name, apellido, telefono, correo);
+        id, name, apellido, telefono, correo, descripcion, ubicacion, urlfoto);
+  }
+
+  @override
+  Future<bool> updatePsicologoProfile(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      String img) async {
+    return await psicologoRemoteDataSource.updatePsicologoProfile(
+        id, name, apellido, telefono, correo, descripcion, ubicacion, img);
+  }
+
+  @override
+  Future<bool> delete(String id) async {
+    return await psicologoRemoteDataSource.delete(id);
   }
 }

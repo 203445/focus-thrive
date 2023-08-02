@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:focusthrive/features/focusthrive/cita/presentation/cita.dart';
-import 'package:focusthrive/features/focusthrive/comentario/presentation/pages/comentario_vista.dart';
-import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/perfil.dart';
-import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/solicitudes.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../../paciente/presentation/pages/ayuda.dart';
+import 'package:focusthrive/features/focusthrive/cita/presentation/pages/cita.dart';
+import 'package:focusthrive/features/focusthrive/comentario/presentation/pages/comentario_vista.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/configuracionPsicologo.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/perfil.dart';
+import 'package:focusthrive/features/focusthrive/solicitud/presentation/pages/solicitudes.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/getPsicologo_provider.dart';
 
 class HomePs extends StatefulWidget {
   const HomePs({super.key});
@@ -16,9 +19,18 @@ class HomePs extends StatefulWidget {
 
 class _HomeState extends State<HomePs> {
   @override
-  Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
+  void initState() {
+    super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GetPsicologoProvider>(context, listen: false).getPaciente();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final getPsicologo = Provider.of<GetPsicologoProvider>(context);
+    final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Column(
         children: [
@@ -34,16 +46,24 @@ class _HomeState extends State<HomePs> {
                   children: [
                     CircleAvatar(
                       radius: 40,
-                      backgroundImage: AssetImage('assets/img/ok.jpg'),
+                      backgroundImage: Image.network(
+                              'http://54.83.165.193${getPsicologo.psicologo?.urlFoto}')
+                          .image,
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Hola Francisco',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white,
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Hola ${getPsicologo.psicologo?.nombre} ',
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -82,7 +102,9 @@ class _HomeState extends State<HomePs> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Solicitudes()));
+                                      builder: (context) => Solicitudes(
+                                            psicologo: getPsicologo.psicologo!,
+                                          )));
                             },
                             child: Container(
                               width: 300,
@@ -112,7 +134,10 @@ class _HomeState extends State<HomePs> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => CitasListView()));
+                                      builder: (context) => CitasListView(
+                                            idDoctor:
+                                                getPsicologo.psicologo!.id,
+                                          )));
                             },
                             child: Container(
                               width: 300,
@@ -142,8 +167,8 @@ class _HomeState extends State<HomePs> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          ComentariosListView()));
+                                      builder: (context) => ComentariosListView(
+                                          psicologo: getPsicologo.psicologo!)));
                             },
                             child: Container(
                               width: 300,
@@ -212,7 +237,10 @@ class _HomeState extends State<HomePs> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => PerfilP()));
+                                        builder: (context) => PerfilP(
+                                              psicologo:
+                                                  getPsicologo.psicologo!,
+                                            )));
                               },
                             ),
                             Text(
@@ -236,11 +264,12 @@ class _HomeState extends State<HomePs> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => AyudaP()));
+                                        builder: (context) => DeleteAccountView(
+                                            id: getPsicologo.psicologo!.id)));
                               },
                             ),
                             Text(
-                              'Ajustes',
+                              'Configuración',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -260,6 +289,3 @@ class _HomeState extends State<HomePs> {
     );
   }
 }
-
-//  Navigator.push(context,
-//                             MaterialPageRoute(builder: (context) =>  PremiumSubscriptionView()));

@@ -18,6 +18,23 @@ abstract class PsicologoRepository {
   Future<bool> loginPsicologo(String correo, String password);
   Future<Psicologo?> getPsicologo();
   Future<List<Psicologo?>> getAllPsicologos();
-  Future<Psicologo?> updatePsicologo(
-      String id, String name, String apellido, String telefono, String correo);
+  Future<bool> updatePsicologo(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      File? urlfoto);
+  Future<bool> updatePsicologoProfile(
+      String id,
+      String name,
+      String apellido,
+      String telefono,
+      String correo,
+      String descripcion,
+      String ubicacion,
+      String img);
+  Future<bool> delete(String id);
 }

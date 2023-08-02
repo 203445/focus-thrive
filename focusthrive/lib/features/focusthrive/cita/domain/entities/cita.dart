@@ -1,4 +1,5 @@
 class Cita {
+  final String id;
   final String nombreD;
   final String nombreP;
   final String motivo;
@@ -9,6 +10,7 @@ class Cita {
   final String idPaciente;
 
   Cita({
+    required this.id,
     required this.nombreD,
     required this.nombreP,
     required this.motivo,
@@ -34,6 +36,7 @@ class Cita {
 
   factory Cita.fromJson(Map<String, dynamic> json) {
     return Cita(
+      id: json["id"],
       nombreD: json['nombre_doctor'],
       nombreP: json['nombre_paciente'],
       motivo: json['motivo'],

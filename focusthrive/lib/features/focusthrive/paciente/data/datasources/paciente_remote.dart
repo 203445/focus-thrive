@@ -26,23 +26,25 @@ Future<File> getImageFileFromAssets() async {
 }
 
 abstract class PacienteRemoteDataSource {
-  Future<bool> createProfile(
-      String nombre,
-      String apellido,
-      File? urlFoto,
-      String correo,
-      String telefono,
-      String contrasena,
-      String esPremium,
-      String numerotarjeta);
+  Future<bool> createProfile(String nombre, String apellido, File? urlFoto,
+      String correo, String telefono, String contrasena, String numerotarjeta);
 
   Future<ent.Paciente?> getPaciente(String id);
   Future<bool> loginPaciente(String correo, String password);
   Future<void> cerrarSesion();
   Future<bool> updatePaciente(String id, String name, String apellido,
-      String email, String telefono, String descripcion);
+      String email, String telefono, File? imagen);
   Future<bool> undoPlanPaciente(String id);
   Future<bool> updatePlanPaciente(String id);
+  Future<bool> updateData(
+    String id,
+    String name,
+    String apellido,
+    String email,
+    String telefono,
+    String imagen,
+  );
+  Future<bool> delete(String id);
 }
 
 class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
@@ -54,7 +56,6 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
       String correo,
       String telefono,
       String contrasena,
-      String esPremium,
       String numerotarjeta) async {
     FormData formData;
 
@@ -80,9 +81,6 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
         "correo": correo,
       });
     }
-    print('hola');
-    print(formData.toString);
-
     final response =
         await dio.post("http://54.147.89.61/cliente/create", data: formData);
     print(response.data);
@@ -221,18 +219,42 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
 
   @override
   Future<bool> updatePaciente(String id, String name, String apellido,
-      String email, String telefono, String descripcion) async {
-    Map<String, dynamic> data = {
-      "nombre": name,
-      "apellidos": apellido,
-      "telefono": telefono,
-      "id": id,
-    };
+      String email, String telefono, File? imagen) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token_P');
+    FormData formData;
+    if (imagen != null) {
+      formData = FormData.fromMap({
+        "nombre": name,
+        "apellidos": apellido,
+        "telefono": telefono,
+        "id": id,
+        "image": await MultipartFile.fromFile(imagen.path,
+            filename: imagen.path.split('/').last),
+        "correo": email,
+      });
+    } else {
+      final File defaultImage = await getImageFileFromAssets();
+      formData = FormData.fromMap({
+        "nombre": name,
+        "apellidos": apellido,
+        "telefono": telefono,
+        "id": id,
+        "image": await MultipartFile.fromFile(defaultImage.path,
+            filename: defaultImage.path.split('/').last),
+        "correo": email,
+      });
+    }
 
     try {
-      final response = await dio.get(
+      final response = await dio.post(
         "http://54.147.89.61/cliente/update",
-        data: jsonEncode(data),
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
       );
 
       if (response.statusCode == 200) {
@@ -306,6 +328,91 @@ class PacienteRemoteDataSourceImp implements PacienteRemoteDataSource {
         // Otras excepciones que no sean de Dio
         print("Error: $e");
       }
+      return false;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> updateData(String id, String name, String apellido, String email,
+      String telefono, String imagen) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token_P');
+    FormData formData;
+
+    formData = FormData.fromMap({
+      "nombre": name,
+      "apellidos": apellido,
+      "telefono": telefono,
+      "id": id,
+      "image": imagen,
+      "correo": email,
+    });
+
+    try {
+      final response = await dio.post(
+        "http://54.147.89.61/cliente/update",
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print('Datos recibidos: ${response.data}');
+        if (response.data == true) return true;
+      } else {
+        print('Error: ${response.statusCode}, ${response.statusMessage}');
+        return false;
+      }
+      // return false;
+    } catch (e) {
+      if (e is DioException) {
+        // Si es un error de Dio (por ejemplo, tiempo de espera agotado)
+        if (e.type == DioExceptionType.connectionTimeout) {
+          print("Error: Tiempo de conexión agotado.");
+        } else if (e.type == DioExceptionType.badResponse) {
+          print(
+              "Error: Respuesta no válida del servidor ${e.response?.statusCode} ${e.response?.statusMessage}");
+        } else {
+          print("Error: $e");
+        }
+      } else {
+        // Otras excepciones que no sean de Dio
+        print("Error: $e");
+      }
+      return false;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> delete(String id) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? token = sharedPreferences.getString('user_token_P');
+
+    Map<String, dynamic> data = {
+      "id": id,
+    };
+
+    try {
+      final response = await dio.post(
+        "http://54.147.89.61/cliente/delete",
+        data: jsonEncode(data),
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data == true) return true;
+      }
+    } catch (e) {
+      print("Error: $e");
       return false;
     }
     return false;

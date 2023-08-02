@@ -1,4 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
+import 'package:dio/dio.dart';
+import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/home.dart';
+
+final dio = Dio();
 
 class Question {
   String question;
@@ -9,7 +16,7 @@ class Question {
 
 List<Question> questions = [
   Question(
-    "¿Cuándo tengo una fecha límite para hacer algo espero hasta el último momento para hacerlo?",
+    "Cuando tengo una fecha límite para hacer algo espero hasta el último momento para hacerlo",
     [
       "Siempre",
       "Casi siempre",
@@ -138,10 +145,12 @@ List<Question> questions = [
       "Nunca",
     ],
   ),
-  // Agrega las otras preguntas y respuestas aquí
 ];
 
 class SurveyView extends StatefulWidget {
+  final String idUser;
+
+  const SurveyView({super.key, required this.idUser});
   @override
   _SurveyViewState createState() => _SurveyViewState();
 }
@@ -155,16 +164,22 @@ class _SurveyViewState extends State<SurveyView> {
     });
   }
 
-  void _saveResponses() {
-    // Aquí puedes procesar las respuestas seleccionadas según las preguntas
+  void _saveResponses() async {
+    Map<String, String> responsesMap = {};
     for (int i = 0; i < questions.length; i++) {
       int? selectedAnswerIndex = selectedAnswers[i];
       if (selectedAnswerIndex != null) {
         String question = questions[i].question;
         String selectedAnswer = questions[i].answers[selectedAnswerIndex];
         print("Pregunta: $question - Respuesta seleccionada: $selectedAnswer");
+        responsesMap[question] = selectedAnswer;
       }
     }
+    final response = await dio.post("http://54.209.71.163/respuesta/create",
+        data: json
+            .encode({'respuestas': responsesMap, "id_usuario": widget.idUser}));
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
 
   @override

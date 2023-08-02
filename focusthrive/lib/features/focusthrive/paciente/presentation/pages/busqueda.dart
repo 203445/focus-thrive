@@ -1,25 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/widgets/paciente_list.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/widgets/paciente_list.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../../../psicologo/presentation/providers/getAllPsicologo_provider.dart';
+import '../../../solicitud/presentation/providers/crearSolicitud_provider.dart';
+import '../../domain/entities/paciente.dart';
 
 class Busqueda extends StatefulWidget {
-  const Busqueda({super.key});
+  final String idPaciente;
+  final Paciente paciente;
+  const Busqueda({super.key, required this.idPaciente, required this.paciente});
 
   @override
   State<Busqueda> createState() => _BusquedaState();
 }
 
 class _BusquedaState extends State<Busqueda> {
-  final List<UserData> userList = [
-    UserData('Psic. Antonio Pimentel ', 4.2, 'assets/img/num.jpg'),
-    UserData('Psic. Agustín Melgares', 4.2, 'assets/img/do.jpg'),
-    UserData('Psic. Francisco Javier', 4.5, 'assets/img/ok.jpg'),
-    // UserData('Psic. José Diaz', 4.0, ''),
-    // Agrega más datos de usuarios aquí...
-  ];
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GetAllPsicologoProvider>(context, listen: false)
+          .getPaciente();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final getPsicologos = Provider.of<GetAllPsicologoProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(90),
@@ -88,10 +100,11 @@ class _BusquedaState extends State<Busqueda> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: userList.length,
+                      itemCount: getPsicologos.psicologo?.length ?? 0,
                       itemBuilder: (context, index) {
                         return PsicologoList(
-                          userData: userList[index],
+                          userData: getPsicologos.psicologo![index],
+                          idPaciente: widget.idPaciente,
                         );
                       },
                     ),
@@ -103,14 +116,85 @@ class _BusquedaState extends State<Busqueda> {
               )),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add_rounded,
+          size: 35,
+          color: Colors.white,
+        ),
+        onPressed: () async {
+          await openDialog();
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+              30), // Ajusta el valor según tus necesidades
+        ),
+        backgroundColor: const Color.fromRGBO(11, 117, 133, 1),
+        focusElevation: 10,
+      ),
     );
   }
-}
 
-class UserData {
-  final String name;
-  final double rating;
-  final String photoUrl;
+  Future openDialog() async {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descripController = TextEditingController();
+    final solicitud =
+        Provider.of<CrearSolicitudProvider>(context, listen: false);
 
-  UserData(this.name, this.rating, this.photoUrl);
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Agregar una Solicitud'),
+          content: SingleChildScrollView(
+            child: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10, left: 5, right: 5),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: descripController,
+                        decoration: const InputDecoration(labelText: 'Motivo'),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(); // Cerrar el diálogo sin guardar los datos
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String descrip = descripController.text;
+                if (descrip.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Es necesario llenar todos los datos'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                } else {
+                  await solicitud.createSolicitud(widget.paciente.nombre,
+                      widget.paciente.correo, descrip, widget.paciente.id);
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    Navigator.of(context).pop();
+                  });
+                }
+              },
+              child: Text('Guardar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

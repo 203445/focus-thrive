@@ -217,7 +217,7 @@ class _LoginPacienteState extends State<LoginPsicologo> {
                                           ),
                                         ),
                                         style: const TextStyle(fontSize: 20),
-                                        obscureText: true,
+                                        obscureText: !_passwordVisible,
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return 'Por favor, ingresa una contraseña';
@@ -277,7 +277,7 @@ class _LoginPacienteState extends State<LoginPsicologo> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const HomePs()));
+                                  builder: (context) => HomePs()));
                         });
                       } else {
                         SchedulerBinding.instance.addPostFrameCallback((_) {

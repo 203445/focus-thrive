@@ -21,13 +21,12 @@ class CreatePacienteProvider extends ChangeNotifier {
       String correo,
       String telefono,
       String contrasena,
-      String esPremium,
       String numerotarjeta) async {
     setLoading(true);
     try {
       print('crear usuario');
       response = await createProfileUseCase.execute(nombre, apellidos, urlFoto,
-          correo, telefono, contrasena, esPremium, numerotarjeta);
+          correo, telefono, contrasena, numerotarjeta);
       // print(response);
       if (response == true) {
         notifyListeners();

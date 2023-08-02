@@ -16,7 +16,7 @@ class ComentarioRepositoryImp implements ComentarioRepository {
   }
 
   @override
-  Future<Comentario?> listComentario(String idDoc) async {
+  Future<List<Comentario?>> listComentario(String idDoc) async {
     return await comentarioRemoteDataSource.listComentario(idDoc);
   }
 }

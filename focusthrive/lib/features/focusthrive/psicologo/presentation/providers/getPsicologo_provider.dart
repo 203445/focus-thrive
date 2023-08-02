@@ -21,9 +21,7 @@ class GetPsicologoProvider extends ChangeNotifier {
     try {
       psicologo = await getPsicologoUseCase.execute();
       if (psicologo != null) {
-        Future.delayed(Duration.zero, () {
-          notifyListeners();
-        });
+        notifyListeners();
         setLoading(false);
       } else {
         setLoading(false);

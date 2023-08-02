@@ -3,5 +3,5 @@ import 'package:focusthrive/features/focusthrive/comentario/domain/entities/come
 abstract class ComentarioRepository {
   Future<Comentario?> createComentario(
       String idP, String idDoc, String descripcion);
-  Future<Comentario?> listComentario(String idDoc);
+  Future<List<Comentario?>> listComentario(String idDoc);
 }

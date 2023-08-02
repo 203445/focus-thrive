@@ -9,7 +9,7 @@ final dio = Dio();
 abstract class ComentarioRemoteDataSource {
   Future<ent.Comentario?> createComentario(
       String idP, String idDoc, String descripcion);
-  Future<ent.Comentario?> listComentario(String idDoc);
+  Future<List<ent.Comentario?>> listComentario(String idDoc);
 }
 
 class ComentarioRemoteDataSourceImp implements ComentarioRemoteDataSource {
@@ -21,7 +21,7 @@ class ComentarioRemoteDataSourceImp implements ComentarioRemoteDataSource {
       "id_paciente": idP,
       "descripcion": descripcion,
     };
-    // final response = await dio.post("$apiURI/create", data: formData);
+
     final response = await dio.post("http://44.217.4.1/comentario/create",
         data: jsonEncode(data));
     print(response);
@@ -36,21 +36,27 @@ class ComentarioRemoteDataSourceImp implements ComentarioRemoteDataSource {
   }
 
   @override
-  Future<ent.Comentario?> listComentario(String idDoc) async {
+  Future<List<ent.Comentario?>> listComentario(String idDoc) async {
+    print('duncion del remote');
+    print(idDoc);
     Map<String, dynamic> data = {
       "id_doctor": idDoc,
     };
-    // final response = await dio.post("$apiURI/create", data: formData);
-    final response = await dio.post("http://44.217.4.1/comentario/create",
+    print(data);
+    final response = await dio.post("http://44.217.4.1/comentario/lista",
         data: jsonEncode(data));
     print(response);
+
     if (response.statusCode == 200) {
-      return ent.Comentario(
-        idDoctor: response.data['id_doctor'].toString(),
-        idPaciente: response.data['id_paciente'].toString(),
-        description: response.data['descripcion'].toString(),
-      );
+      print('Datos recibidos: ${response.data}');
+      List<dynamic> jsonList = response.data;
+      List<ent.Comentario> consejoList =
+          jsonList.map((jsonMap) => ent.Comentario.fromJson(jsonMap)).toList();
+
+      return consejoList;
+    } else {
+      print('Error: ${response.statusCode}, ${response.statusMessage}');
+      return [];
     }
-    return null;
   }
 }

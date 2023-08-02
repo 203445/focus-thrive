@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/login.dart';
 import 'package:focusthrive/features/focusthrive/paciente/presentation/provider/createPaciente_provider.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/loginPsicologo.dart';
 import 'package:focusthrive/stripe_service.dart';
 import 'package:provider/provider.dart';
 
-import 'features/focusthrive/paciente/presentation/pages/home2.dart';
 import 'features/focusthrive/paciente/presentation/widgets/buton.dart';
 
 class Registro extends StatefulWidget {
@@ -30,6 +30,14 @@ class _MyWidgetState extends State<Registro> {
   // final TextEditingController _cardNumberController = TextEditingController();
   File? _file;
   late bool _passwordVisible = false;
+  // Limpia el controlador
+  void clearController() {
+    _passwordController.clear();
+    _nameController.clear();
+    _lastNameController.clear();
+    _confirmPasswordController.clear();
+    _correoController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +303,6 @@ class _MyWidgetState extends State<Registro> {
                   if (_nameController.text == '' ||
                       _lastNameController.text == '' ||
                       _passwordController.text == '' ||
-                      _correoController.text == '' ||
                       _correoController.text == '') {
                     SchedulerBinding.instance.addPostFrameCallback((_) {
                       showDialogWithMessage(
@@ -304,6 +311,7 @@ class _MyWidgetState extends State<Registro> {
                   } else {
                     if (_passwordController.text ==
                         _confirmPasswordController.text) {
+                      clearController();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -342,8 +350,6 @@ class UserTypeScreen extends StatelessWidget {
   final String password;
   final File? file;
 
-  // final TextEditingController _cardNumberController = TextEditingController();
-
   const UserTypeScreen(
       {super.key,
       required this.name,
@@ -370,7 +376,7 @@ class UserTypeScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   await crearP.createProfile(
-                      name, lastName, file, email, "", password, "ninguno", "");
+                      name, lastName, file, email, "", password, "");
                   if (crearP.response == false) {
                     SchedulerBinding.instance.addPostFrameCallback((_) {
                       showDialogWithMessage(context, 'Error al registrarse',
@@ -380,7 +386,7 @@ class UserTypeScreen extends StatelessWidget {
                     SchedulerBinding.instance.addPostFrameCallback((_) {
                       showDialogWithMessage(
                           context, 'Success', 'Registro correcto');
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const LoginPaciente(),
@@ -404,8 +410,10 @@ class UserTypeScreen extends StatelessWidget {
                   await StripeService.stripePaymentCheckout(
                       items, 100, context, 1, onSuccess: () {
                     print('SUCCES');
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const HomeP()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPsicologo()));
                   }, onCancel: () {
                     print('CANCEL');
                   }, onError: (e) {

@@ -18,10 +18,9 @@ class PacienteRepositoryImp extends PacienteRepository {
       String correo,
       String telefono,
       String contrasena,
-      String esPremium,
       String numerotarjeta) async {
     return await pacienteRemoteDataSource.createProfile(nombre, apellidos,
-        urlFoto, correo, telefono, contrasena, esPremium, numerotarjeta);
+        urlFoto, correo, telefono, contrasena, numerotarjeta);
   }
 
   @override
@@ -41,9 +40,9 @@ class PacienteRepositoryImp extends PacienteRepository {
 
   @override
   Future<bool> updatePaciente(String id, String name, String apellido,
-      String email, String telefono, String descripcion) async {
+      String email, String telefono, File? imagen) async {
     return await pacienteRemoteDataSource.updatePaciente(
-        id, name, apellido, email, telefono, descripcion);
+        id, name, apellido, email, telefono, imagen);
   }
 
   @override
@@ -54,5 +53,22 @@ class PacienteRepositoryImp extends PacienteRepository {
   @override
   Future<bool> updatePlanPaciente(String id) async {
     return await pacienteRemoteDataSource.updatePlanPaciente(id);
+  }
+
+  @override
+  Future<bool> updateData(
+    String id,
+    String name,
+    String apellido,
+    String email,
+    String telefono,
+    String imagen,
+  ) async {
+    return await pacienteRemoteDataSource.updateData(
+        id, name, apellido, email, telefono, imagen);
+  }
+
+  Future<bool> delete(String id) async {
+    return await pacienteRemoteDataSource.delete(id);
   }
 }

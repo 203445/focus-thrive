@@ -19,4 +19,9 @@ class SolicitudRepositoryImp extends SolicitudRepository {
     return await solicitudRemoteDataSource.createSolicitud(
         nombreP, correo, motivo, idPaciente);
   }
+
+  @override
+  Future<List<SolicitudesC?>> listSolicitud() async {
+    return await solicitudRemoteDataSource.listSolicitud();
+  }
 }

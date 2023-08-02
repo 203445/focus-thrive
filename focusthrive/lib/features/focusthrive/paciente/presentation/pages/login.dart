@@ -86,7 +86,7 @@ class _LoginPacienteState extends State<LoginPaciente> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 50, top: 30),
+                            padding: const EdgeInsets.only(bottom: 30, top: 30),
                             child: Form(
                               key: _formKey,
                               child: SizedBox(
@@ -219,7 +219,7 @@ class _LoginPacienteState extends State<LoginPaciente> {
                                           ),
                                         ),
                                         style: const TextStyle(fontSize: 20),
-                                        obscureText: true,
+                                        obscureText: !_passwordVisible,
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return 'Por favor, ingresa una contraseña';
@@ -233,6 +233,37 @@ class _LoginPacienteState extends State<LoginPaciente> {
                                     ],
                                   )),
                             ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LoginPsicologo()));
+                            },
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: const TextSpan(
+                                text: '',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color.fromRGBO(11, 117, 133, 1),
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Soy Psicólogo',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
                           ),
                           GestureDetector(
                             onTap: () {
@@ -262,35 +293,7 @@ class _LoginPacienteState extends State<LoginPaciente> {
                             ),
                           ),
                           const SizedBox(
-                            height: 80,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LoginPsicologo()));
-                            },
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: const TextSpan(
-                                text: '',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(11, 117, 133, 1),
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'Soy Psicólogo',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            height: 40,
                           ),
                         ],
                       )),

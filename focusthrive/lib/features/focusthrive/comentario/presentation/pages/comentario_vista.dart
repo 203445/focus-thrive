@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:focusthrive/features/focusthrive/comentario/presentation/pages/providers/get_comentario_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-// Modelo de ejemplo para representar un comentario
+import '../../../psicologo/domain/entities/psicologo.dart';
+
 class Comentario {
   final String nombreUsuario;
   final String descripcion;
@@ -12,23 +15,28 @@ class Comentario {
   });
 }
 
-class ComentariosListView extends StatelessWidget {
-  // Datos de ejemplo para los comentarios
-  final List<Comentario> comentarios = [
-    Comentario(
-      nombreUsuario: 'Ana Flores',
-      descripcion: '¡Excelente servicio! Me encanta.',
-    ),
-    Comentario(
-      nombreUsuario: 'Jose Ochoa',
-      descripcion: 'Sin duda volería a ir.',
-    ),
+class ComentariosListView extends StatefulWidget {
+  final Psicologo psicologo;
 
-    // Agrega más comentarios aquí si lo deseas
-  ];
+  const ComentariosListView({super.key, required this.psicologo});
+
+  @override
+  State<ComentariosListView> createState() => _ComentariosListViewState();
+}
+
+class _ComentariosListViewState extends State<ComentariosListView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GetComentarioProvider>(context, listen: false)
+          .listComentario(widget.psicologo.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final listComentario = Provider.of<GetComentarioProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -74,21 +82,29 @@ class ComentariosListView extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
-        itemCount: comentarios.length,
+        itemCount: listComentario.comentario?.length ?? 0,
         itemBuilder: (context, index) {
-          final comentario = comentarios[index];
-          return Card(
-            child: ListTile(
-              leading: CircleAvatar(
-                child: Text(comentario.nombreUsuario[0]),
+          final comentario = listComentario.comentario?[index];
+
+          if (listComentario.comentario == [] ||
+              listComentario.comentario!.isEmpty) {
+            // Mostrar un mensaje o widget alternativo si no hay comentarios.
+            return Center(
+              child: Text('Aun no tienes comentarios.'),
+            );
+          } else {
+            return Card(
+              child: ListTile(
+                leading: CircleAvatar(
+                  child: Text('Usuario Anónimo'[8]),
+                ),
+                title: Text('Usuario Anónimo'),
+                subtitle: Text(comentario!.description),
               ),
-              title: Text(comentario.nombreUsuario),
-              subtitle: Text(comentario.descripcion),
-            ),
-          );
+            );
+          }
         },
       ),
     );
   }
 }
-

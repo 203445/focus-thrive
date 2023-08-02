@@ -1,11 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:focusthrive/features/focusthrive/cita/domain/entities/cita.dart'
     as ent;
 import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final dio = Dio();
 
@@ -21,6 +17,8 @@ abstract class CitaRemoteDataSource {
       String idPaciente);
   Future<List<ent.Cita?>> getCita(String id);
   Future<bool> deleteCita(String id);
+  Future<List<ent.Cita?>> getCitaPaciente(String id);
+  Future<bool> updateCita(String id, String status);
 }
 
 class CitaRemoteDataSourceImp implements CitaRemoteDataSource {
@@ -51,6 +49,7 @@ class CitaRemoteDataSourceImp implements CitaRemoteDataSource {
     print(response);
     if (response.statusCode == 200) {
       return ent.Cita(
+          id: response.data['id'].toString(),
           nombreD: response.data['nombre_doctor'].toString(),
           nombreP: response.data['nombre_paciente'].toString(),
           motivo: response.data['motivo'].toString(),
@@ -101,6 +100,46 @@ class CitaRemoteDataSourceImp implements CitaRemoteDataSource {
     final response = await dio.post("http://54.146.114.123/cita/delete",
         data: jsonEncode(data));
 
+    if (response.data == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<List<ent.Cita?>> getCitaPaciente(String id) async {
+    Map<String, dynamic> data = {
+      "id_doctor": id,
+    };
+
+    final response = await dio.post("http://54.146.114.123/cita/lista/user",
+        data: jsonEncode(data));
+
+    if (response.statusCode == 200) {
+      print('Datos recibidos: ${response.data}');
+      // Decodifica la respuesta JSON a una lista de mapas (objetos JSON)
+      List<dynamic> jsonList = response.data;
+
+      // Convierte la lista de mapas a una lista de objetos Consejo
+      List<ent.Cita> citaList =
+          jsonList.map((jsonMap) => ent.Cita.fromJson(jsonMap)).toList();
+
+      return citaList;
+    } else {
+      print('Error: ${response.statusCode}, ${response.statusMessage}');
+
+      return [];
+    }
+  }
+
+  @override
+  Future<bool> updateCita(String id, String status) async {
+    Map<String, dynamic> data = {"id_cita": id, "status": status};
+
+    final response = await dio.post("http://54.146.114.123/cita/update/status",
+        data: jsonEncode(data));
+    print(response.data);
     if (response.data == true) {
       return true;
     } else {

@@ -6,7 +6,7 @@ class ListComentarioUseCase {
 
   ListComentarioUseCase(this.comentarioRepository);
 
-  Future<Comentario?> execute(String idDoc) async {
+  Future<List<Comentario?>> execute(String idDoc) async {
     return await comentarioRepository.listComentario(idDoc);
   }
 }

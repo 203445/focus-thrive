@@ -1,4 +1,5 @@
 import 'package:focusthrive/features/focusthrive/consejo/data/datasources/consejo_remote.dart';
+import 'package:focusthrive/features/focusthrive/encuesta/data/datasources/respuesta_remote.dart';
 import 'package:focusthrive/features/focusthrive/paciente/data/datasources/paciente_remote.dart';
 import 'package:focusthrive/features/focusthrive/consejo/data/repositories/consejo_repository_imp.dart';
 import 'package:focusthrive/features/focusthrive/consejo/domain/usecases/get_consejo_usecases.dart';
@@ -8,13 +9,22 @@ import 'package:focusthrive/features/focusthrive/psicologo/domain/usecases/psico
 import 'package:focusthrive/features/focusthrive/solicitud/domain/usecases/create_solicitud_usecases.dart';
 import 'package:focusthrive/features/focusthrive/tarea/domain/usecases/update_tarea_usecases.dart';
 
+import 'features/focusthrive/cita/domain/usecases/get_citaPaciente_usecases.dart';
+import 'features/focusthrive/cita/domain/usecases/update_cita_usecases.dart';
 import 'features/focusthrive/comentario/data/datasources/comentario_remote.dart';
 import 'features/focusthrive/comentario/domain/usecases/list_comentario_usecases.dart';
+import 'features/focusthrive/encuesta/data/repositories/respuesta_repository_imp.dart';
+import 'features/focusthrive/encuesta/domain/usecases/get_respuesta_usecases.dart';
 import 'features/focusthrive/paciente/domain/usecases/create_profile_usecases.dart';
+import 'features/focusthrive/paciente/domain/usecases/delete_cuenta_usecases.dart';
 import 'features/focusthrive/paciente/domain/usecases/udpatePlan_paciente_usecases.dart';
 import 'features/focusthrive/paciente/domain/usecases/undoPlan_paciente_usecases.dart';
+import 'features/focusthrive/paciente/domain/usecases/update_data_usecases.dart';
 import 'features/focusthrive/paciente/domain/usecases/update_paciente_usecases.dart';
+import 'features/focusthrive/psicologo/domain/usecases/psicologo/delete_psicologo_usecases.dart';
+import 'features/focusthrive/psicologo/domain/usecases/psicologo/updateImage_profile_usecases.dart';
 import 'features/focusthrive/psicologo/domain/usecases/psicologo/update_psicologo_usecases.dart';
+import 'features/focusthrive/solicitud/domain/usecases/list_solicitud_usecases.dart';
 import 'features/focusthrive/tarea/data/datasources/tarea_remote.dart';
 import 'features/focusthrive/comentario/data/repositories/comentario_repository_imp.dart';
 import 'features/focusthrive/paciente/data/repositories/paciente_respository_imp.dart';
@@ -56,12 +66,15 @@ class UsecaseConfig {
   UpdatePacienteUseCase? updatePacienteUseCase;
   UndoPlanPacienteUseCase? undoPlanPacienteUseCase;
   UpdatePlanPacienteUseCase? updatePlanPacienteUseCase;
+  UpdatePacienteDataUseCase? updatePacienteDataUseCase;
+  DeletePacienteUseCase? deletePacienteUseCase;
 
   PacienteRepositoryImp? pacienteRepositoryImp;
   PacienteRemoteDataSourceImp? pacienteRemoteDataSourceImp;
 
   // ---------------Solicitudes---------------------
   CreateSolicitudUseCase? createSolicitudUseCase;
+  ListSolicitudUseCase? listSolicitudUseCase;
 
   SolicitudRepositoryImp? solicitudRepositoryImp;
   SolicitudRemoteDataSourceImp? solicitudRemoteDataSourceImp;
@@ -70,6 +83,8 @@ class UsecaseConfig {
   CreateCitaUseCase? createCitaUseCase;
   GetCitaUseCase? getCitaUseCase;
   DeleteCitaUseCase? deleteCitaUseCase;
+  UpdateCitaUseCase? updateCitaUseCase;
+  GetCitaPacienteUseCase? getCitaPacienteUseCase;
 
   CitaRepositoryImp? citaRepositoryImp;
   CitaRemoteDataSourceImp? citaRemoteDataSourceImp;
@@ -81,8 +96,10 @@ class UsecaseConfig {
 
   PsicologoRepositoryImp? psicologoRepositoryImp;
   PsicologoRemoteDataSourceImp? psicologoRemoteDataSourceImp;
-  GetAllPsicologoUseCase? getPsicologosUseCase;
+  GetAllPsicologoUseCase? getAllPsicologosUseCase;
   UpdatePsicologoUseCase? updatePsicologoUseCase;
+  UpdatePsicologoProfileUseCase? updatePsicologoProfileUseCase;
+  DeletePsicologoUseCase? deletePsicologoUseCase;
 
   // -----------------Consejo------------------------------
   GetConsejoUseCase? getConsejoUseCase;
@@ -96,6 +113,11 @@ class UsecaseConfig {
 
   ComentarioRepositoryImp? comentarioRepositoryImp;
   ComentarioRemoteDataSourceImp? comentarioRemoteDataSourceImp;
+
+  // --------------------Respuesta----------------------------
+  GetRespuestaUseCase? getRespuestaUseCase;
+  RespuestaRepositoryImp? respuestaRepositoryImp;
+  RespuestaRemoteDataSourceImp? respuestaRemoteDataSourceImp;
 
   UsecaseConfig() {
     // -------------------TAREA-------------------------------
@@ -114,6 +136,7 @@ class UsecaseConfig {
         solicitudRemoteDataSource: solicitudRemoteDataSourceImp!);
 
     createSolicitudUseCase = CreateSolicitudUseCase(solicitudRepositoryImp!);
+    listSolicitudUseCase = ListSolicitudUseCase(solicitudRepositoryImp!);
 
     // -----------------------CITA-------------------------------------
     citaRemoteDataSourceImp = CitaRemoteDataSourceImp();
@@ -123,6 +146,8 @@ class UsecaseConfig {
     createCitaUseCase = CreateCitaUseCase(citaRepositoryImp!);
     getCitaUseCase = GetCitaUseCase(citaRepositoryImp!);
     deleteCitaUseCase = DeleteCitaUseCase(citaRepositoryImp!);
+    updateCitaUseCase = UpdateCitaUseCase(citaRepositoryImp!);
+    getCitaPacienteUseCase = GetCitaPacienteUseCase(citaRepositoryImp!);
 
     // ---------------------PSICOLOGO----------------------------------
     psicologoRemoteDataSourceImp = PsicologoRemoteDataSourceImp();
@@ -133,9 +158,11 @@ class UsecaseConfig {
         CreateProfilePsicologoUseCase(psicologoRepositoryImp!);
     loginPsicologoUseCase = LoginPsicologoUseCase(psicologoRepositoryImp!);
     getPsicologoUseCase = GetPsicologoUseCase(psicologoRepositoryImp!);
-    getPsicologosUseCase = GetAllPsicologoUseCase(psicologoRepositoryImp!);
+    getAllPsicologosUseCase = GetAllPsicologoUseCase(psicologoRepositoryImp!);
     updatePsicologoUseCase = UpdatePsicologoUseCase(psicologoRepositoryImp!);
-
+    updatePsicologoProfileUseCase =
+        UpdatePsicologoProfileUseCase(psicologoRepositoryImp!);
+    deletePsicologoUseCase = DeletePsicologoUseCase(psicologoRepositoryImp!);
     // --------------------CONSEJO-------------------------------------
     consejoRemoteDataSourceImp = ConsejoRemoteDataSourceImp();
     consejoRepositoryImp = ConsejoRepositoryImp(
@@ -155,6 +182,7 @@ class UsecaseConfig {
     undoPlanPacienteUseCase = UndoPlanPacienteUseCase(pacienteRepositoryImp!);
     updatePlanPacienteUseCase =
         UpdatePlanPacienteUseCase(pacienteRepositoryImp!);
+    deletePacienteUseCase = DeletePacienteUseCase(pacienteRepositoryImp!);
 
     // -------------------COMENTARIOS---------------------------------
     comentarioRemoteDataSourceImp = ComentarioRemoteDataSourceImp();
@@ -163,5 +191,11 @@ class UsecaseConfig {
 
     createComenterioUseCase = CreateComentarioUseCase(comentarioRepositoryImp!);
     listComentarioUseCase = ListComentarioUseCase(comentarioRepositoryImp!);
+
+    // ----------------------RESPUESTA----------------------------------
+    respuestaRemoteDataSourceImp = RespuestaRemoteDataSourceImp();
+    respuestaRepositoryImp = RespuestaRepositoryImp(
+        respuestaRemoteDataSource: respuestaRemoteDataSourceImp!);
+    getRespuestaUseCase = GetRespuestaUseCase(respuestaRepositoryImp!);
   }
 }

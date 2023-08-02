@@ -1,21 +1,44 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/cuentaP.dart';
-import 'package:focusthrive/features/focusthrive/paciente/presentation/pages/login.dart';
-import 'package:focusthrive/onboarding.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/cuentaPsicologo.dart';
+import 'package:focusthrive/features/focusthrive/psicologo/presentation/pages/infoPerfil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../../../paciente/presentation/pages/ayuda.dart';
+import '../../domain/entities/psicologo.dart';
+import '../providers/getPsicologo_provider.dart';
+import '../providers/updatePsicologo-provider.dart';
 
 class PerfilP extends StatefulWidget {
-  const PerfilP({super.key});
+  final Psicologo psicologo;
+  const PerfilP({super.key, required this.psicologo});
 
   @override
   State<PerfilP> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<PerfilP> {
+  File? _profileimage;
+
+  Future getImage() async {
+    final img = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (img == null) {
+      return;
+    }
+    setState(() {
+      _profileimage = File(img.path);
+    });
+
+    print(_profileimage);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final psicologo = Provider.of<GetPsicologoProvider>(context);
+    final update = Provider.of<UpdatePsicologoProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
@@ -66,10 +89,55 @@ class _PerfilState extends State<PerfilP> {
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 110,
-                  backgroundImage: AssetImage('assets/img/ok.jpg'),
-                ),
+                Stack(children: [
+                  CircleAvatar(
+                    backgroundImage: _profileimage != null
+                        ? Image.file(_profileimage!).image
+                        : Image.network(
+                                'http://54.83.165.193${widget.psicologo.urlFoto}')
+                            .image,
+                    radius: 100,
+                  ),
+                  if (_profileimage != null)
+                    Positioned(
+                        right: 5,
+                        bottom: 10,
+                        child: FloatingActionButton.small(
+                          onPressed: () async {
+                            await update.updatePsicologo(
+                                widget.psicologo.id,
+                                widget.psicologo.nombre,
+                                widget.psicologo.apellidos,
+                                widget.psicologo.telefono,
+                                _profileimage,
+                                widget.psicologo.description,
+                                widget.psicologo.ubicacion,
+                                widget.psicologo.correo);
+                            if (update.response == true) {
+                              await psicologo.getPaciente();
+                            } else {
+                              print('Error al actualizar ');
+                            }
+                          },
+                          backgroundColor: Colors.white,
+                          //
+                          child: const Icon(Icons.save,
+                              color: Color.fromRGBO(11, 117, 133, 1)),
+                        )),
+                  if (_profileimage == null)
+                    Positioned(
+                        right: 5,
+                        bottom: 10,
+                        child: FloatingActionButton.small(
+                          onPressed: () {
+                            getImage();
+                          },
+                          backgroundColor: Colors.white,
+                          //
+                          child: const Icon(Icons.edit,
+                              color: Color.fromRGBO(11, 117, 133, 1)),
+                        )),
+                ]),
                 Padding(
                   padding: EdgeInsets.only(
                     bottom: 10,
@@ -115,10 +183,13 @@ class _PerfilState extends State<PerfilP> {
                         ),
                       ),
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => CuentaP()),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CuentaPsicologo(
+                                    psicologo: widget.psicologo,
+                                  )),
+                        );
                       },
                       child: Text(
                         "Cuenta",
@@ -151,9 +222,17 @@ class _PerfilState extends State<PerfilP> {
                           width: 1.0,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DataEntryScreen(
+                                    psicologo: psicologo.psicologo!,
+                                  )),
+                        );
+                      },
                       child: Text(
-                        "Configuración",
+                        "Mi perfil",
                         style: GoogleFonts.getFont(
                           'Work Sans',
                           textStyle: const TextStyle(
@@ -183,7 +262,10 @@ class _PerfilState extends State<PerfilP> {
                           width: 1.0,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => AyudaP()));
+                      },
                       child: Text(
                         "Ayuda",
                         style: GoogleFonts.getFont(

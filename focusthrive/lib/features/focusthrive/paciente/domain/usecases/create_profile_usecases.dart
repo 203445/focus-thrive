@@ -13,9 +13,8 @@ class CreateProfileUseCase {
       String correo,
       String telefono,
       String contrasena,
-      String esPremium,
       String numerotarjeta) async {
     return await pacienteRepository.createProfile(nombre, apellidos, urlFoto,
-        correo, telefono, contrasena, esPremium, numerotarjeta);
+        correo, telefono, contrasena, numerotarjeta);
   }
 }
